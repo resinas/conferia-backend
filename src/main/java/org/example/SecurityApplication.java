@@ -15,6 +15,7 @@ public class SecurityApplication implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     public static void main(String[] args) {
+
         SpringApplication.run(SecurityApplication.class, args);
     }
 
