@@ -26,7 +26,7 @@ public class SecurityApplication implements CommandLineRunner {
 
             user.setEmail("admin@gmail.com");
             user.setFirstname("admin");
-            user.setSecondname("admin");
+            user.setLastname("admin");
             user.setRole(Role.ADMIN);
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 

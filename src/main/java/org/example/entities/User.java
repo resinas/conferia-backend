@@ -10,14 +10,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Data
-@Table(name = "user")
+@Table(name = "users")
 @Entity
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String firstname;
-    private String secondname;
+    private String lastname;
     private String email;
     private String password;
     @Enumerated(EnumType.STRING)

@@ -1,14 +1,13 @@
 package org.example.services;
 
-import org.example.dto.JwtAuthenticationResponse;
-import org.example.dto.RefreshTokenRequest;
-import org.example.dto.SignUpRequest;
-import org.example.dto.SigninRequest;
+import org.example.dto.*;
 import org.example.entities.User;
 
 public interface AuthenticationService {
 
-    User signup(SignUpRequest signUpRequest);
+    User updateCredentials (UpdateRequest updateRequest);
+
+    User register(RegisterRequest registerRequest);
 
     JwtAuthenticationResponse signin(SigninRequest signinRequest);
 

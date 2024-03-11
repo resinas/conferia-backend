@@ -1,17 +1,16 @@
 package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.JwtAuthenticationResponse;
-import org.example.dto.RefreshTokenRequest;
-import org.example.dto.SignUpRequest;
-import org.example.dto.SigninRequest;
+import org.example.dto.*;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.repository.UserRepository;
 import org.example.services.AuthenticationService;
+import org.example.services.EmailService;
 import org.example.services.JWTService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,13 +24,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
-    public User signup(SignUpRequest signUpRequest){
+    private final EmailService emailService;
+
+    public User register(RegisterRequest registerRequest){
         User user = new User();
-        user.setEmail(signUpRequest.getEmail());
-        user.setFirstname(signUpRequest.getFirstname());
-        user.setSecondname(signUpRequest.getLastname());
+        user.setEmail(registerRequest.getEmail());
+        user.setFirstname(registerRequest.getFirstname());
+        user.setLastname(registerRequest.getLastname());
         user.setRole(Role.USER);
-        user.setPassword(passwordEncoder.encode(signUpRequest.getPassword()));
 
         return userRepository.save(user);
     }
@@ -65,6 +65,16 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             return jwtAuthenticationResponse;
         }
         return null;
+    }
+
+    public User updateCredentials(UpdateRequest updateRequest){
+        User user = userRepository.findByEmail(updateRequest.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + updateRequest.getEmail()));
+
+        user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
+        user.setLastname(updateRequest.getLastname());
+        user.setFirstname(updateRequest.getFirstname());
+        return userRepository.save(user);
     }
 
 }
