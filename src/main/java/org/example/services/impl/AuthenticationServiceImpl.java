@@ -21,17 +21,17 @@ import java.util.HashMap;
 public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
     private final EmailService emailService;
+    private final PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequest registerRequest){
         User user = new User();
         user.setEmail(registerRequest.getEmail());
         user.setFirstname(registerRequest.getFirstname());
         user.setLastname(registerRequest.getLastname());
-        user.setRole(Role.USER);
+        user.setRole(Role.INACTIVE);
 
         return userRepository.save(user);
     }
@@ -71,9 +71,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         User user = userRepository.findByEmail(updateRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + updateRequest.getEmail()));
 
-        user.setPassword(passwordEncoder.encode(updateRequest.getPassword()));
+        user.setPassword(passwordEncoder.encode(updateRequest.getPassword())); //passwordEncoder.encode()
         user.setLastname(updateRequest.getLastname());
         user.setFirstname(updateRequest.getFirstname());
+
+        if (user.getRole() == Role.INACTIVE) {
+            user.setRole(Role.USER);
+        }
+
         return userRepository.save(user);
     }
 

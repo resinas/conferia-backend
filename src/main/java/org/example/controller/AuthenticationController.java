@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.apache.coyote.Response;
 import org.example.dto.*;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
@@ -25,11 +26,6 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
-    @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestBody UpdateRequest updateRequest){
-        return ResponseEntity.ok(authenticationService.updateCredentials(updateRequest));
-    }
-
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest signinRequest){
         return ResponseEntity.ok(authenticationService.signin(signinRequest));
@@ -49,7 +45,5 @@ public class AuthenticationController {
             System.err.println("Error sending email: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send signup email.");
         }
-
-
     }
 }

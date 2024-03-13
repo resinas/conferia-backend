@@ -5,12 +5,12 @@ import org.example.entities.User;
 
 public interface AuthenticationService {
 
-    User updateCredentials (UpdateRequest updateRequest);
-
     User register(RegisterRequest registerRequest);
 
     JwtAuthenticationResponse signin(SigninRequest signinRequest);
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
+
+    User updateCredentials (UpdateRequest updateRequest);
 
     }
