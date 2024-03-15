@@ -9,5 +9,8 @@ public interface PageService {
     Page save(PageRequest pageRequest);
 
     Optional<Page> findById(Integer id);
+
+    Page update (PageRequest pageRequest, Integer id);
+
 }
 

@@ -11,6 +11,6 @@ public interface AuthenticationService {
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-    User updateCredentials (UpdateRequest updateRequest);
+    User updateCredentials (UserRequest updateRequest);
 
     }

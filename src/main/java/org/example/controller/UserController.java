@@ -1,18 +1,14 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.RegisterRequest;
-import org.example.dto.SignUpRequest;
-import org.example.dto.UpdateRequest;
+import org.example.dto.UserRequest;
 import org.example.entities.User;
-import org.example.repository.UserRepository;
 import org.example.services.AuthenticationService;
 import org.example.services.JWTService;
 import org.example.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import org.example.services.impl.JWTServiceImpl;
 
 @RestController
 @RequestMapping("/api/v1/user")
@@ -36,7 +32,7 @@ public class UserController {
         return ResponseEntity.ok(userDetails);
     }
     @PostMapping("/update")
-    public ResponseEntity<User> update(@RequestBody UpdateRequest updateRequest){
+    public ResponseEntity<User> update(@RequestBody UserRequest updateRequest){
         return ResponseEntity.ok(authenticationService.updateCredentials(updateRequest));
     }
 }

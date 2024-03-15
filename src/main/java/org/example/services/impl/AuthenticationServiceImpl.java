@@ -67,7 +67,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return null;
     }
 
-    public User updateCredentials(UpdateRequest updateRequest){
+    public User updateCredentials(UserRequest updateRequest){
         User user = userRepository.findByEmail(updateRequest.getEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + updateRequest.getEmail()));
 
