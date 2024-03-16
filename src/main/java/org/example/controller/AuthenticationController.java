@@ -41,7 +41,6 @@ public class AuthenticationController {
     }
 
     //Email Operations
-    @PreAuthorize("hasRole('INACTIVE')")
     @PostMapping("/email")
     public ResponseEntity<?> sendSignup(@RequestBody EmailRequest emailRequest) {
         try {
