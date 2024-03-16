@@ -8,6 +8,7 @@ import org.example.services.AuthenticationService;
 import org.example.services.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,6 +22,9 @@ public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final EmailService emailService;
 
+
+    //User registration, sign-in, and JWT token management.
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(authenticationService.register(registerRequest));
@@ -36,6 +40,8 @@ public class AuthenticationController {
         return ResponseEntity.ok(authenticationService.refreshToken(refreshTokenRequest));
     }
 
+    //Email Operations
+    @PreAuthorize("hasRole('INACTIVE')")
     @PostMapping("/email")
     public ResponseEntity<?> sendSignup(@RequestBody EmailRequest emailRequest) {
         try {
