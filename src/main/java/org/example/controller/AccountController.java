@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.ResetPasswordRequest;
 import org.example.dto.RegisterRequest;
 import org.example.dto.UserRequest;
 import org.example.entities.User;
@@ -51,6 +52,15 @@ public class AccountController {
     public ResponseEntity<User> updateUser(@RequestBody UserRequest updateRequest) {
         return ResponseEntity.ok(authenticationService.updateCredentials(updateRequest));
     }
+
+    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest, username));
+    }
+
 
 
 }

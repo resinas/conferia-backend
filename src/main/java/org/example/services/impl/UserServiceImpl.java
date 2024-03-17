@@ -1,6 +1,7 @@
 package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
+
 import org.example.repository.UserRepository;
 import org.example.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -23,9 +24,5 @@ public class UserServiceImpl implements UserService {
             }
         };
     }
-
-
-
-
 
 }

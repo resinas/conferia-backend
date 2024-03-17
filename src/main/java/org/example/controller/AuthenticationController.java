@@ -1,14 +1,11 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.apache.coyote.Response;
 import org.example.dto.*;
-import org.example.entities.User;
 import org.example.services.AuthenticationService;
 import org.example.services.EmailService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,7 +32,7 @@ public class AuthenticationController {
     }
 
     //Email Operations
-    @PostMapping("/email")
+    @PostMapping("/signup")
     public ResponseEntity<?> sendSignup(@RequestBody EmailRequest emailRequest) {
         try {
             emailService.sendSignup(emailRequest);
@@ -45,4 +42,15 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send signup email.");
         }
     }
+    @PostMapping("/resetPassword")
+    public ResponseEntity<?> resetPassword(@RequestBody EmailRequest emailRequest) {
+        try {
+            emailService.sendResetPassword(emailRequest);
+            return ResponseEntity.ok().body("Reset email sent successfully.");
+        } catch (Exception e) {
+            System.err.println("Error sending email: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send reset email.");
+        }
+    }
+
 }

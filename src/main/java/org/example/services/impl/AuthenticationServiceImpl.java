@@ -23,7 +23,6 @@ public class AuthenticationServiceImpl implements AuthenticationService {
     private final UserRepository userRepository;
     private final AuthenticationManager authenticationManager;
     private final JWTService jwtService;
-    private final EmailService emailService;
     private final PasswordEncoder passwordEncoder;
 
     public User register(RegisterRequest registerRequest){
@@ -79,6 +78,13 @@ public class AuthenticationServiceImpl implements AuthenticationService {
             user.setRole(Role.USER);
         }
 
+        return userRepository.save(user);
+    }
+
+    public User resetPassword(ResetPasswordRequest resetPasswordRequest, String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
         return userRepository.save(user);
     }
 
