@@ -23,13 +23,7 @@ public class AuthenticationController {
     private final EmailService emailService;
 
 
-    //User registration, sign-in, and JWT token management.
-    @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/register")
-    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest){
-        return ResponseEntity.ok(authenticationService.register(registerRequest));
-    }
-
+    //User sign-in, and JWT token management.
     @PostMapping("/signin")
     public ResponseEntity<JwtAuthenticationResponse> signin(@RequestBody SigninRequest signinRequest){
         return ResponseEntity.ok(authenticationService.signin(signinRequest));

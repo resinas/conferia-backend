@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.RegisterRequest;
 import org.example.dto.UserRequest;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
@@ -37,6 +38,12 @@ public class AccountController {
         return ResponseEntity.ok(userDetails);
     }
 
+    //Register new users
+    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/register")
+    public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest){
+        return ResponseEntity.ok(authenticationService.register(registerRequest));
+    }
 
     //Updating credentials:
     @PreAuthorize("hasRole('INACTIVE') or hasRole('USER') or hasRole('ADMIN')")
