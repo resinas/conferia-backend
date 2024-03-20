@@ -21,25 +21,26 @@ public class PageController {
     private final PageRepository pageRepository;
 
     //CRUD operations for managing page content.
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
     public ResponseEntity<Page> createPage (@RequestBody PageRequest pageRequest) {
-        return ResponseEntity.ok(pageService.save(pageRequest));
+        return ResponseEntity.ok(pageService.create(pageRequest));
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/update/{id}")
     public ResponseEntity<Page> updatePage (@PathVariable Integer id, @RequestBody PageRequest pageRequest) {
         return ResponseEntity.ok(pageService.update(pageRequest, id));
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Page> getPageById(@PathVariable Integer id) {
         return ResponseEntity.ok(pageService.findById(id).orElseThrow(() -> new RuntimeException("Page not found")));
     }
 
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping
     public ResponseEntity<List<Page>> getPages() {
         List<Page> pages = pageRepository.findAll();

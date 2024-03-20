@@ -6,7 +6,7 @@ import org.example.entities.Page;
 import java.util.Optional;
 
 public interface PageService {
-    Page save(PageRequest pageRequest);
+    Page create(PageRequest pageRequest);
 
     Optional<Page> findById(Integer id);
 

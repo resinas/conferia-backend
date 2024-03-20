@@ -18,11 +18,12 @@ public class PageServiceImpl implements PageService {
     private final PageRepository pageRepository;
 
 
-    public Page save(PageRequest pageRequest) {
+    public Page create(PageRequest pageRequest) {
         Page page = new Page();
         page.setTitle(pageRequest.getTitle());
         page.setContent(pageRequest.getContent());
         page.setLayoutId(pageRequest.getLayoutId());
+
         return pageRepository.save(page);
     }
 
@@ -40,4 +41,5 @@ public class PageServiceImpl implements PageService {
 
         return pageRepository.save(page);
     }
+
 }

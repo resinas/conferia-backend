@@ -8,12 +8,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("api/vi/admin")
+@RequestMapping("api/v1/admin")
 @RequiredArgsConstructor
 public class AdminController {
 
     //stuff like role adjustments, system health etc. when we get there.
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("Hi ADMIN");

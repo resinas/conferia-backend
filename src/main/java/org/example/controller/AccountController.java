@@ -24,13 +24,13 @@ public class AccountController {
 
 
     //Basic user interaction and fetching user details:
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("Hi User");
     }
 
-    @PreAuthorize("hasRole('INACTIVE') or hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")
     @GetMapping("/userDetails")
     public ResponseEntity<UserDetails> getUserDetails(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = authorizationHeader.substring(7);
@@ -40,27 +40,17 @@ public class AccountController {
     }
 
     //Register new users
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestBody RegisterRequest registerRequest){
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
     //Updating credentials:
-    @PreAuthorize("hasRole('INACTIVE') or hasRole('USER') or hasRole('ADMIN')")
+    @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")
     @PostMapping("/update")
     public ResponseEntity<User> updateUser(@RequestBody UserRequest updateRequest) {
         return ResponseEntity.ok(authenticationService.updateCredentials(updateRequest));
     }
-
-    @PreAuthorize("hasRole('USER') or hasRole('ADMIN')")
-    @PostMapping("/resetPassword")
-    public ResponseEntity<?> resetPassword(@RequestBody ResetPasswordRequest resetPasswordRequest, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        String token = authorizationHeader.substring(7);
-        String username = jwtService.extractUserName(token);
-        return ResponseEntity.ok(authenticationService.resetPassword(resetPasswordRequest, username));
-    }
-
-
 
 }

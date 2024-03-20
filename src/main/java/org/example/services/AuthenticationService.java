@@ -13,6 +13,4 @@ public interface AuthenticationService {
 
     User updateCredentials (UserRequest updateRequest);
 
-    User resetPassword(ResetPasswordRequest resetPasswordRequest, String username);
-
     }
