@@ -34,7 +34,8 @@ public class AgendaServiceImpl implements AgendaService {
                         header.getHost(),
                         header.getLocation(),
                         header.getStartTime(),
-                        header.getEndTime()))
+                        header.getEndTime(),
+                        header.getType()))
                 .collect(Collectors.toList());
     }
 
@@ -49,6 +50,7 @@ public class AgendaServiceImpl implements AgendaService {
                     header.getLocation(),
                     header.getStartTime(),
                     header.getEndTime(),
+                    header.getType(),
                     content
             );
         }).orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Session not found with id: " + id));

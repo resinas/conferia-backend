@@ -16,6 +16,8 @@ public class SessionHeader {
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @Enumerated(EnumType.STRING)
+    private SessionType type;
 
     @OneToOne(mappedBy = "header", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private SessionContent content;

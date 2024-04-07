@@ -2,6 +2,7 @@ package org.example.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.example.entities.SessionType;
 
 import java.time.LocalDateTime;
 @Data
@@ -12,5 +13,7 @@ public class SessionDTO {
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private SessionType type;
     private String content;
+
 }

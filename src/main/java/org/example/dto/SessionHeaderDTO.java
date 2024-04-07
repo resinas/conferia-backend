@@ -3,6 +3,7 @@ package org.example.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.example.entities.SessionType;
 
 import java.time.LocalDateTime;
 
@@ -15,4 +16,5 @@ public class SessionHeaderDTO {
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    private SessionType type;
 }
