@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dto.EmailRequest;
+import org.example.dto.requests.EmailRequest;
 
 import java.nio.file.AccessDeniedException;
 

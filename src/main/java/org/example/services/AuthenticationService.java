@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dto.*;
+import org.example.dto.requests.*;
 import org.example.entities.User;
 
 public interface AuthenticationService {

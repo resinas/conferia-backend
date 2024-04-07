@@ -1,9 +1,8 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.ResetPasswordRequest;
-import org.example.dto.RegisterRequest;
-import org.example.dto.UserRequest;
+import org.example.dto.requests.RegisterRequest;
+import org.example.dto.requests.UserRequest;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
 import org.example.services.JWTService;

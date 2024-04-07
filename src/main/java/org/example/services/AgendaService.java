@@ -1,14 +1,19 @@
 package org.example.services;
 
-import org.example.dto.SessionRequest;
+import org.example.dto.SessionDTO;
+import org.example.dto.SessionHeaderDTO;
 import org.example.entities.SessionHeader;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AgendaService {
-    Optional<SessionHeader> findById(Long id);
+    SessionDTO findById(Long id);
 
-    SessionHeader update(SessionRequest sessionRequest, Long id);
+    SessionHeader update(SessionDTO sessionDTO, Long id);
 
-    SessionHeader create(SessionRequest sessionRequest);
+    SessionHeader create(SessionDTO sessionDTO);
+
+    List<SessionHeaderDTO> fetchAll();
+
 }

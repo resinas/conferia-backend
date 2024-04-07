@@ -1,15 +1,18 @@
 package org.example.dto;
 
-import jakarta.persistence.Lob;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+
 @Data
-public class SessionRequest {
+@AllArgsConstructor
+public class SessionHeaderDTO {
+    private Long id;
     private String name;
     private String host;
     private String location;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
-    private String content;
 }

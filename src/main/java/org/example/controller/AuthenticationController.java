@@ -1,7 +1,10 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.*;
+import org.example.dto.requests.EmailRequest;
+import org.example.dto.requests.JwtAuthenticationResponse;
+import org.example.dto.requests.RefreshTokenRequest;
+import org.example.dto.requests.SigninRequest;
 import org.example.services.AuthenticationService;
 import org.example.services.EmailService;
 import org.springframework.http.HttpStatus;

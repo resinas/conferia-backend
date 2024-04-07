@@ -1,8 +1,8 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.SessionRequest;
-import org.example.entities.Page;
+import org.example.dto.SessionDTO;
+import org.example.dto.SessionHeaderDTO;
 import org.example.entities.SessionHeader;
 import org.example.repository.SessionHeaderRepository;
 import org.example.services.AgendaService;
@@ -20,28 +20,29 @@ public class AgendaController {
     private final AgendaService agendaService;
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @GetMapping
-    public ResponseEntity<List<SessionHeader>> getHeaders() {
-        List<SessionHeader> headers = sessionHeaderRepository.findAll();
+    @GetMapping("/sessions")
+    public ResponseEntity<List<SessionHeaderDTO>> getHeaders() {
+        List<SessionHeaderDTO> headers = agendaService.fetchAll();
         return ResponseEntity.ok(headers);
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @GetMapping("/{id}")
-    public ResponseEntity<SessionHeader> getSessionById(@PathVariable Long id) {
-        return ResponseEntity.ok(agendaService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Session not found")));
+    @GetMapping("/session/{id}")
+    public ResponseEntity<SessionDTO> getSessionById(@PathVariable Long id) {
+        SessionDTO response = agendaService.findById(id);
+        return ResponseEntity.ok(response);
+    }
+
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/session/create")
+    public ResponseEntity<SessionHeader> createPage (@RequestBody SessionDTO sessionDTO) {
+        return ResponseEntity.ok(agendaService.create(sessionDTO));
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/session")
-    public ResponseEntity<SessionHeader> createPage (@RequestBody SessionRequest sessionRequest) {
-        return ResponseEntity.ok(agendaService.create(sessionRequest));
-    }
-
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/update/{id}")
-    public ResponseEntity<SessionHeader> updatePage (@PathVariable Long id, @RequestBody SessionRequest sessionRequest) {
-        return ResponseEntity.ok(agendaService.update(sessionRequest, id));
+    @PostMapping("/session/update/{id}")
+    public ResponseEntity<SessionHeader> updatePage (@PathVariable Long id, @RequestBody SessionDTO sessionDTO) {
+        return ResponseEntity.ok(agendaService.update(sessionDTO, id));
     }
 }

@@ -1,12 +1,11 @@
 package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.*;
+import org.example.dto.requests.*;
 import org.example.entities.Role;
 import org.example.entities.User;
 import org.example.repository.UserRepository;
 import org.example.services.AuthenticationService;
-import org.example.services.EmailService;
 import org.example.services.JWTService;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
