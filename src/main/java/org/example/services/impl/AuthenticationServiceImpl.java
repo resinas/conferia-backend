@@ -66,7 +66,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return null;
     }
 
-    public JwtAuthenticationResponse updateCredentials(String username, UpdateUserRequest updateRequest){
+    public JwtAuthenticationResponse updateCredentials(String username, UserRequest updateRequest){
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 

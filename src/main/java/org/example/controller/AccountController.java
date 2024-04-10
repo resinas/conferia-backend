@@ -1,9 +1,11 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.requests.ChangePasswordRequest;
+import org.example.dto.requests.JwtAuthenticationResponse;
 import org.example.dto.requests.RegisterRequest;
 import org.example.dto.requests.UserRequest;
-import org.example.dto.*;
+import org.example.dto.responses.GetUserResponse;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
 import org.example.services.FirebaseService;
@@ -54,7 +56,7 @@ public class AccountController {
     //Updating credentials:
     @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")
     @PostMapping("/update")
-    public ResponseEntity<JwtAuthenticationResponse> updateUser(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @RequestBody UpdateUserRequest updateRequest) {
+    public ResponseEntity<JwtAuthenticationResponse> updateUser(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @RequestBody UserRequest updateRequest) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
         return ResponseEntity.ok(authenticationService.updateCredentials(username, updateRequest));

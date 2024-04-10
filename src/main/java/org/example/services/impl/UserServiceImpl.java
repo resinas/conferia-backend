@@ -2,12 +2,11 @@ package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
 
-import org.example.dto.GetUserResponse;
+import org.example.dto.responses.GetUserResponse;
 import org.example.entities.User;
 import org.example.repository.UserRepository;
 import org.example.services.FirebaseService;
 import org.example.services.UserService;
-import org.example.dto.UpdateUserRequest;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;

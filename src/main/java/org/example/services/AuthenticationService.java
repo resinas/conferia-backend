@@ -11,7 +11,7 @@ public interface AuthenticationService {
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-    JwtAuthenticationResponse updateCredentials (String username, UpdateUserRequest updateRequest);
+    JwtAuthenticationResponse updateCredentials (String username, UserRequest updateRequest);
 
     User changePasswordForUser(ChangePasswordRequest changePasswordRequest, String username);
 
