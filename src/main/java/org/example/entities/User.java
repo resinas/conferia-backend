@@ -20,6 +20,10 @@ public class User implements UserDetails {
     private String lastname;
     private String email;
     private String password;
+    private String company;
+    private String country;
+    private Boolean sharingchoice;
+    private String profileUrl;
     @Enumerated(EnumType.STRING)
     private Role role;
 

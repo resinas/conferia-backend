@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dto.*;
+import org.example.dto.requests.*;
 import org.example.entities.User;
 
 public interface AuthenticationService {
@@ -11,6 +11,8 @@ public interface AuthenticationService {
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);
 
-    User updateCredentials (UserRequest updateRequest);
+    JwtAuthenticationResponse updateCredentials (String username, UserRequest updateRequest);
 
-    }
+    User changePasswordForUser(ChangePasswordRequest changePasswordRequest, String username);
+
+}

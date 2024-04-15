@@ -1,7 +1,7 @@
 package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.EmailRequest;
+import org.example.dto.requests.EmailRequest;
 import org.example.services.EmailService;
 import org.example.services.JWTService;
 import org.example.services.UserService;

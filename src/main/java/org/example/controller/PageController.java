@@ -7,9 +7,8 @@ import org.example.repository.PageRepository;
 import org.example.services.PageService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
-import org.example.dto.PageRequest;
+import org.example.dto.requests.PageRequest;
 
 import java.util.List;
 

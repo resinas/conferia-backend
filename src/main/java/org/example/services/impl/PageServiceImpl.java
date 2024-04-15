@@ -1,13 +1,10 @@
 package org.example.services.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.PageRequest;
+import org.example.dto.requests.PageRequest;
 import org.example.entities.Page;
-import org.example.entities.Role;
-import org.example.entities.User;
 import org.example.repository.PageRepository;
 import org.example.services.PageService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;

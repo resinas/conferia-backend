@@ -1,6 +1,6 @@
 package org.example.services;
 
-import org.example.dto.PageRequest;
+import org.example.dto.requests.PageRequest;
 import org.example.entities.Page;
 
 import java.util.Optional;
