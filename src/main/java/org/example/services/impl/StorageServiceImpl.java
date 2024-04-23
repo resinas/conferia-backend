@@ -56,7 +56,6 @@ public class StorageServiceImpl implements StorageService {
         userRepository.save(user);
 
         Path storageDirectory = Paths.get(storageDir + "/profilePictures");
-        Files.createDirectories(storageDirectory);
 
         // Ensure the storage directory exists
         if (!Files.exists(storageDirectory)) {
