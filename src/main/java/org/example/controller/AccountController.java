@@ -8,13 +8,16 @@ import org.example.dto.requests.UserRequest;
 import org.example.dto.responses.GetUserResponse;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
-import org.example.services.FirebaseService;
+import org.example.services.StorageService;
 import org.example.services.JWTService;
 import org.example.services.UserService;
+import org.springframework.core.io.Resource;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.net.URL;
@@ -27,7 +30,7 @@ public class AccountController {
     private final JWTService jwtService;
     private final UserService userService;
     private final AuthenticationService authenticationService;
-    private final FirebaseService firebaseService;
+    private final StorageService storageService;
 
 
     //Basic user interaction and fetching user details:
@@ -74,20 +77,23 @@ public class AccountController {
 
     // Change profile picture
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @GetMapping("/uploadProfilePicture")
-    public ResponseEntity<URL> getSignedPutUrl(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) throws IOException {
+    @PostMapping("/uploadProfilePicture")
+    public ResponseEntity<String> storeFile(@RequestParam("file") MultipartFile file, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) throws IOException {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        return ResponseEntity.ok(firebaseService.generateUploadSignedUrl("icpm-conference-ad251.appspot.com",username));
+        storageService.storeProfileImage(file, username);
+        return ResponseEntity.ok("File was uploaded successfully");
     }
 
     // Change profile picture
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/getProfilePicture")
-    public ResponseEntity<URL> getSignedGetUrl(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) throws IOException {
+    public ResponseEntity<Resource> getProfilePicture(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) throws IOException {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        return ResponseEntity.ok(firebaseService.generateRetrieveSignedUrl("icpm-conference-ad251.appspot.com",username));
+        return ResponseEntity.ok()
+                .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
+                .body(storageService.getProfileImage(username));
     }
 
 

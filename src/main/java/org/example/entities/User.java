@@ -22,8 +22,10 @@ public class User implements UserDetails {
     private String password;
     private String company;
     private String country;
-    private Boolean sharingchoice;
-    private String profileUrl;
+    private Boolean sharingchoice = false;
+    private String avatarPath;
+    @OneToMany(mappedBy = "owner")
+    private List<GalleryImage> galleryImages;
     @Enumerated(EnumType.STRING)
     private Role role;
 
