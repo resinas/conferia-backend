@@ -15,7 +15,7 @@ public interface StorageService {
     Resource getProfileImage(String username) throws IOException;
 
     GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest) throws MalformedURLException;
-    Resource getGalleryImage(String filepath);
+    Resource getGalleryImage(String filepath, String format);
 
     void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
 

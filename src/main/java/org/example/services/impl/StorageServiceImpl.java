@@ -33,9 +33,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -63,9 +61,19 @@ public class StorageServiceImpl implements StorageService {
         }
 
         Path destinationFilePath = storageDirectory.resolve(user.getId() + ".jpg");
+        Path destinationFilePathWebP = storageDirectory.resolve(user.getId() + ".webp");
 
         // Copy the file to the destination, replacing it if it already exists
-        file.transferTo(destinationFilePath);
+        try {
+            file.transferTo(destinationFilePath);
+            byte[] webPImageData = convertToWebP(destinationFilePath.toFile());
+            File webPFile = destinationFilePathWebP.toFile();
+            try (FileOutputStream fos = new FileOutputStream(webPFile)) {
+                fos.write(webPImageData);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Resource getProfileImage(String username) throws IOException {
@@ -103,10 +111,10 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
-    public Resource getGalleryImage(String filepath) {
+    public Resource getGalleryImage(String filepath, String format) {
         try {
             Path basePath = Paths.get(storageDir, "Gallery");
-            Path fileWebP = basePath.resolve(filepath + ".webp").normalize();
+            Path fileWebP = basePath.resolve(filepath + "." + format).normalize();
 
             Resource resourceWebP = new UrlResource(fileWebP.toUri());
             if (resourceWebP.exists() && resourceWebP.isReadable()) {
@@ -152,7 +160,6 @@ public class StorageServiceImpl implements StorageService {
             try (FileOutputStream fos = new FileOutputStream(webPFile)) {
                 fos.write(webPImageData);
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

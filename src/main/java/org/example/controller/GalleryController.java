@@ -24,15 +24,17 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@ModelAttribute GetGalleryRequest getGalleryRequest) throws MalformedURLException {
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize) throws MalformedURLException {
+        GetGalleryRequest getGalleryRequest = new GetGalleryRequest();
+        getGalleryRequest.setPageNr(pageNr);
+        getGalleryRequest.setPageSize(pageSize);
         return ResponseEntity.ok(storageService.getGalleryImagesMetadata(getGalleryRequest));
     }
 
 
     @GetMapping("/image/{filepath}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filepath) {
-        System.out.println(filepath);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(storageService.getGalleryImage(filepath));
+    public ResponseEntity<Resource> getImage(@PathVariable String filepath, @RequestParam(name = "format") String format) {
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(storageService.getGalleryImage(filepath,format));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
@@ -46,10 +48,10 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @DeleteMapping("/images/{id}")
-    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable Integer imageId) {
+    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable Integer id) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        storageService.deleteGalleryImage(username,imageId);
+        storageService.deleteGalleryImage(username,id);
         return ResponseEntity.ok("The image was deleted successfully");
     }
 }
