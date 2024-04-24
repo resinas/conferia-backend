@@ -2,8 +2,6 @@ package org.example.dto.responses;
 
 import lombok.Data;
 
-import java.net.URL;
-
 @Data
 public class GetUserResponse {
     private String firstname;
@@ -12,6 +10,6 @@ public class GetUserResponse {
     private String password;
     private String country;
     private String company;
-    private URL profilePicture;
+    private String profilePicture;
     private boolean sharingChoice;
 }

@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.responses.GetUserResponse;
 import org.example.entities.User;
 import org.example.repository.UserRepository;
-import org.example.services.FirebaseService;
+import org.example.services.StorageService;
 import org.example.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -19,7 +19,7 @@ import java.io.IOException;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-    private final FirebaseService firebaseService;
+    private final StorageService storageService;
 
     @Override
     public UserDetailsService userDetailsService() {
@@ -40,12 +40,7 @@ public class UserServiceImpl implements UserService {
             getUserResponse.setCompany(user.getCompany());
             getUserResponse.setCountry(user.getCountry());
             getUserResponse.setSharingChoice(user.getSharingchoice());
-            if (user.getAvatarpath() != null) {
-                getUserResponse.setProfilePicture(firebaseService.generateRetrieveSignedUrl(
-                        "icpm-conference-ad251.appspot.com",
-                        user.getEmail())
-                );
-            }
+            getUserResponse.setProfilePicture(user.getAvatarPath());
             return getUserResponse;
         }
         throw new IllegalArgumentException("The provided userDetails cannot be cast to User");
