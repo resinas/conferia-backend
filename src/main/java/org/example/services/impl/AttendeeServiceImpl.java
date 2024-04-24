@@ -6,6 +6,8 @@ import org.example.entities.User;
 import org.example.repository.UserRepository;
 import org.example.services.AttendeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
@@ -19,10 +21,9 @@ public class AttendeeServiceImpl implements AttendeeService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<AttendeeResponse> FetchAll() {
-        return userRepository.findAll().stream()
-                .map(this::convertToDto)
-                .collect(Collectors.toList());
+    public Page<AttendeeResponse> GetAttendees(Pageable pageable) {
+        Page<User> page = userRepository.findAll(pageable);
+        return page.map(this::convertToDto);
     }
 
     private AttendeeResponse convertToDto(User user) {
@@ -30,7 +31,7 @@ public class AttendeeServiceImpl implements AttendeeService {
         dto.setFirstname(user.getFirstname());
         dto.setLastname(user.getLastname());
         if (Boolean.TRUE.equals(user.getSharingchoice())){
-            dto.setAvatarpath(user.getAvatarpath());
+            dto.setAvatarpath(user.getAvatarPath());
             dto.setCompany(user.getCompany());
             dto.setCountry(user.getCountry());
         } else {

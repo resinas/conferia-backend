@@ -50,7 +50,7 @@ public class StorageServiceImpl implements StorageService {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
-        String objectName = "profilePicture/" + user.getId() + ".jpeg";
+        String objectName = "profilePicture/" + user.getId();
 
         user.setAvatarPath(objectName);
         userRepository.save(user);
@@ -63,22 +63,35 @@ public class StorageServiceImpl implements StorageService {
         }
 
         Path destinationFilePath = storageDirectory.resolve(user.getId() + ".jpg");
+        Path webpdestinationFilePath = storageDirectory.resolve(user.getId() + ".webp");
 
-        // Copy the file to the destination, replacing it if it already exists
-        file.transferTo(destinationFilePath);
+        // Copy the file to the destination, both normal and webp, replacing it if it already exists
+        try {
+            file.transferTo(destinationFilePath);
+            byte[] webPImageData = convertToWebP(destinationFilePath.toFile());
+            File webPFile = webpdestinationFilePath.toFile();
+            try (FileOutputStream fos = new FileOutputStream(webPFile)) {
+                fos.write(webPImageData);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+
     }
 
-    public Resource getProfileImage(String username) throws IOException {
+    public Resource getProfileImage(String username, String format) throws IOException {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-        Path path = Paths.get(storageDir + "/profilePictures", user.getId() + ".jpg");
+        Path path = Paths.get(storageDir + "/profilePictures", user.getId() + "." + format);
 
         Resource resource = new UrlResource(path.toUri());
 
         if (!resource.exists()) {
-            throw new RuntimeException("File not found " + user.getId() + ".jpg");
+            throw new RuntimeException("File not found " + user.getId() + "." + format);
         }
 
         return resource;
