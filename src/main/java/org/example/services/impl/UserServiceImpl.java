@@ -40,7 +40,7 @@ public class UserServiceImpl implements UserService {
             getUserResponse.setCompany(user.getCompany());
             getUserResponse.setCountry(user.getCountry());
             getUserResponse.setSharingChoice(user.getSharingchoice());
-            if (user.getProfileUrl() != null) {
+            if (user.getAvatarpath() != null) {
                 getUserResponse.setProfilePicture(firebaseService.generateRetrieveSignedUrl(
                         "icpm-conference-ad251.appspot.com",
                         user.getEmail())

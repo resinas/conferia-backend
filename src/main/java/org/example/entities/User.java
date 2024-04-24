@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String company;
     private String country;
     private Boolean sharingchoice;
-    private String profileUrl;
+    private String avatarpath;
     @Enumerated(EnumType.STRING)
     private Role role;
 

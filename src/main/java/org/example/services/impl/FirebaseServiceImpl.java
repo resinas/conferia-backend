@@ -28,7 +28,7 @@ public class FirebaseServiceImpl implements FirebaseService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
         String objectName = "profilePicture/" + user.getId() + ".jpeg";
 
-        user.setProfileUrl(objectName);
+        user.setAvatarpath(objectName);
         userRepository.save(user);
 
         Storage storage = StorageOptions.newBuilder().setCredentials(GoogleCredentials.fromStream(
@@ -53,7 +53,7 @@ public class FirebaseServiceImpl implements FirebaseService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
         String objectName = "profilePicture/" + user.getId() + ".webp";
 
-        user.setProfileUrl(objectName);
+        user.setAvatarpath(objectName);
 
         Storage storage = StorageOptions.newBuilder().setCredentials(GoogleCredentials.fromStream(
                         new ClassPathResource("icpm-conference-ad251-firebase-adminsdk-apsls-de3033cd9e.json").getInputStream()))
