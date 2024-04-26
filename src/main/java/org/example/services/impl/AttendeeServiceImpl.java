@@ -21,8 +21,15 @@ public class AttendeeServiceImpl implements AttendeeService {
     @Autowired
     private UserRepository userRepository;
 
-    public Page<AttendeeResponse> GetAttendees(Pageable pageable) {
-        Page<User> page = userRepository.findAll(pageable);
+    public Page<AttendeeResponse> getAttendees(Pageable pageable, String search) {
+        Page<User> page;
+        if (search != null && !search.trim().isEmpty()) {
+            page = userRepository.findBySearch(
+                    search, search, search, search, pageable
+            );
+        } else {
+            page = userRepository.findAll(pageable);
+        }
         return page.map(this::convertToDto);
     }
 

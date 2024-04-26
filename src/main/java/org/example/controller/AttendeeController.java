@@ -9,6 +9,7 @@ import org.springframework.data.domain.PageRequest;
 import org.example.dto.responses.AttendeeResponse;
 import org.example.services.AttendeeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -26,11 +27,13 @@ public class AttendeeController {
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<Page<AttendeeResponse>> GetAttendees(@RequestParam(required = false, defaultValue = "0") int page,
-                                                               @RequestParam(required = false, defaultValue = "200") int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        return ResponseEntity.ok(attendeeService.GetAttendees(pageable));
+    public ResponseEntity<Page<AttendeeResponse>> getAttendees(@RequestParam(required = false, defaultValue = "0") int page,
+                                                               @RequestParam(required = false, defaultValue = "50") int size,
+                                                               @RequestParam(required = false) String search) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("lastname"));
+        return ResponseEntity.ok(attendeeService.getAttendees(pageable, search));
     }
+
 
     @GetMapping("/avatar/{username}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
