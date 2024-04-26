@@ -28,7 +28,13 @@ public class User implements UserDetails {
     private List<GalleryImage> galleryImages;
     @Enumerated(EnumType.STRING)
     private Role role;
-
+    @ManyToMany(cascade = CascadeType.MERGE)
+    @JoinTable(
+            name = "image_likes",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "image_id")
+    )
+    private List<GalleryImage> likes;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

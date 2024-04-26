@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
+import org.example.dto.responses.GetSingleImageDataResponse;
 import org.example.entities.GalleryImage;
 import org.example.entities.User;
 import org.example.repository.GalleryStorageRepository;
@@ -34,6 +35,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -109,6 +111,22 @@ public class StorageServiceImpl implements StorageService {
             System.out.println("Failed to fetch images metadata" + e.getMessage());
             return null;
         }
+    }
+
+    public GetSingleImageDataResponse getGalleryImageSingleData(String filepath, String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+        GetSingleImageDataResponse getSingleImageDataResponse = new GetSingleImageDataResponse();
+        Optional<GalleryImage> galleryImage = galleryStorageRepository.findByPath(filepath);
+        if (galleryImage.isPresent()) {
+            GalleryImage image = galleryImage.get();
+            getSingleImageDataResponse.setImageAuthor(image.getOwner().getFirstname() + " " + image.getOwner().getLastname());
+            getSingleImageDataResponse.setImageLikes(image.getLikedBy().size());
+            getSingleImageDataResponse.setHasLiked(image.getLikedBy().contains(user));
+
+        }
+        return getSingleImageDataResponse;
+
     }
 
     public Resource getGalleryImage(String filepath, String format) {

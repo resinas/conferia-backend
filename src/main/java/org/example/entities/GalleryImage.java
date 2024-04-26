@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Table(name = "galleryImages")
@@ -20,4 +21,7 @@ public class GalleryImage {
     private String path;
 
     private LocalDateTime uploadTime;
+
+    @ManyToMany(mappedBy = "likes")
+    private List<User> likedBy;
 }

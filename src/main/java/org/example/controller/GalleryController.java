@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
+import org.example.dto.responses.GetSingleImageDataResponse;
 import org.example.services.JWTService;
 import org.example.services.StorageService;
 import org.springframework.core.io.Resource;
@@ -32,9 +33,17 @@ public class GalleryController {
     }
 
 
-    @GetMapping("/image/{filepath}")
+    @GetMapping("/images/{filepath}")
     public ResponseEntity<Resource> getImage(@PathVariable String filepath, @RequestParam(name = "format") String format) {
         return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(storageService.getGalleryImage(filepath,format));
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/image/{filepath}")
+    public ResponseEntity<GetSingleImageDataResponse> getSingleImageData(@PathVariable String filepath, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(storageService.getGalleryImageSingleData(filepath, username));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
