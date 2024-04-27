@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
+import org.example.dto.responses.GetSingleImageDataResponse;
 import org.example.services.JWTService;
 import org.example.services.StorageService;
 import org.springframework.core.io.Resource;
@@ -24,15 +25,25 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@ModelAttribute GetGalleryRequest getGalleryRequest) throws MalformedURLException {
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize) throws MalformedURLException {
+        GetGalleryRequest getGalleryRequest = new GetGalleryRequest();
+        getGalleryRequest.setPageNr(pageNr);
+        getGalleryRequest.setPageSize(pageSize);
         return ResponseEntity.ok(storageService.getGalleryImagesMetadata(getGalleryRequest));
     }
 
 
+    @GetMapping("/images/{filepath}")
+    public ResponseEntity<Resource> getImage(@PathVariable String filepath, @RequestParam(name = "format") String format) {
+        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(storageService.getGalleryImage(filepath,format));
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/image/{filepath}")
-    public ResponseEntity<Resource> getImage(@PathVariable String filepath) {
-        System.out.println(filepath);
-        return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(storageService.getGalleryImage(filepath));
+    public ResponseEntity<GetSingleImageDataResponse> getSingleImageData(@PathVariable String filepath, @RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(storageService.getGalleryImageSingleData(filepath, username));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
@@ -45,11 +56,20 @@ public class GalleryController {
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @DeleteMapping("/images/{id}")
-    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable Integer imageId) {
+    @GetMapping("/myImages")
+    public ResponseEntity<GetGalleryResponse> getMyGalleryImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        storageService.deleteGalleryImage(username,imageId);
+        return ResponseEntity.ok(storageService.getMyGalleryImagesMetadata(username));
+
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @DeleteMapping("/images/{id}")
+    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable Integer id) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        storageService.deleteGalleryImage(username,id);
         return ResponseEntity.ok("The image was deleted successfully");
     }
 }

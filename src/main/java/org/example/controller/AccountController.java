@@ -1,6 +1,7 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.requests.ChangeLikeStatusGalleryImageRequest;
 import org.example.dto.requests.ChangePasswordRequest;
 import org.example.dto.requests.JwtAuthenticationResponse;
 import org.example.dto.requests.RegisterRequest;
@@ -94,6 +95,15 @@ public class AccountController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
                 .body(storageService.getProfileImage(username, format));
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PutMapping("/changeLikeStatusGalleyImage")
+    public ResponseEntity<String> changeLikeStatusForGalleryImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,@RequestBody ChangeLikeStatusGalleryImageRequest changeLikeStatusGalleryImageRequest) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        userService.ChangeLikeStatusForGalleryImage(changeLikeStatusGalleryImageRequest.getLikes(), username, changeLikeStatusGalleryImageRequest.getPath());
+        return ResponseEntity.ok("Like status changed");
     }
 
 

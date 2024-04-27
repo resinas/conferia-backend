@@ -13,4 +13,6 @@ public interface UserService {
 
     GetUserResponse getModifiedUserDetails(UserDetails userDetails) throws IOException;
 
+    void ChangeLikeStatusForGalleryImage(Boolean likes, String username, String filePath);
+
 }

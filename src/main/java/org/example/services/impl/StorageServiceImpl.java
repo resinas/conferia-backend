@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
+import org.example.dto.responses.GetSingleImageDataResponse;
 import org.example.entities.GalleryImage;
 import org.example.entities.User;
 import org.example.repository.GalleryStorageRepository;
@@ -35,6 +36,7 @@ import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -50,7 +52,7 @@ public class StorageServiceImpl implements StorageService {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
-        String objectName = "profilePicture/" + user.getId();
+        String objectName = "profilePicture/" + user.getId() + ".jpeg";
 
         user.setAvatarPath(objectName);
         userRepository.save(user);
@@ -63,35 +65,32 @@ public class StorageServiceImpl implements StorageService {
         }
 
         Path destinationFilePath = storageDirectory.resolve(user.getId() + ".jpg");
-        Path webpdestinationFilePath = storageDirectory.resolve(user.getId() + ".webp");
+        Path destinationFilePathWebP = storageDirectory.resolve(user.getId() + ".webp");
 
-        // Copy the file to the destination, both normal and webp, replacing it if it already exists
+        // Copy the file to the destination, replacing it if it already exists
         try {
             file.transferTo(destinationFilePath);
             byte[] webPImageData = convertToWebP(destinationFilePath.toFile());
-            File webPFile = webpdestinationFilePath.toFile();
+            File webPFile = destinationFilePathWebP.toFile();
             try (FileOutputStream fos = new FileOutputStream(webPFile)) {
                 fos.write(webPImageData);
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-    public Resource getProfileImage(String username, String format) throws IOException {
+    public Resource getProfileImage(String username) throws IOException {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-        Path path = Paths.get(storageDir + "/profilePictures", user.getId() + "." + format);
+        Path path = Paths.get(storageDir + "/profilePictures", user.getId() + ".jpg");
 
         Resource resource = new UrlResource(path.toUri());
 
         if (!resource.exists()) {
-            throw new RuntimeException("File not found " + user.getId() + "." + format);
+            throw new RuntimeException("File not found " + user.getId() + ".jpg");
         }
 
         return resource;
@@ -116,10 +115,39 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
-    public Resource getGalleryImage(String filepath) {
+    public GetSingleImageDataResponse getGalleryImageSingleData(String filepath, String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+        GetSingleImageDataResponse getSingleImageDataResponse = new GetSingleImageDataResponse();
+        Optional<GalleryImage> galleryImage = galleryStorageRepository.findByPath(filepath);
+        if (galleryImage.isPresent()) {
+            GalleryImage image = galleryImage.get();
+            getSingleImageDataResponse.setImageAuthor(image.getOwner().getFirstname() + " " + image.getOwner().getLastname());
+            getSingleImageDataResponse.setImageLikes(image.getLikedBy().size());
+            getSingleImageDataResponse.setHasLiked(image.getLikedBy().contains(user));
+
+        }
+        return getSingleImageDataResponse;
+
+    }
+
+    public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+
+        List<String> imagePaths = user.getGalleryImages().stream()
+                .map(GalleryImage::getPath)
+                .collect(Collectors.toList());
+        GetGalleryResponse getGalleryResponse = new GetGalleryResponse();
+        getGalleryResponse.setImagePaths(imagePaths);
+        return getGalleryResponse;
+    }
+
+
+    public Resource getGalleryImage(String filepath, String format) {
         try {
             Path basePath = Paths.get(storageDir, "Gallery");
-            Path fileWebP = basePath.resolve(filepath + ".webp").normalize();
+            Path fileWebP = basePath.resolve(filepath + "." + format).normalize();
 
             Resource resourceWebP = new UrlResource(fileWebP.toUri());
             if (resourceWebP.exists() && resourceWebP.isReadable()) {
@@ -165,7 +193,6 @@ public class StorageServiceImpl implements StorageService {
             try (FileOutputStream fos = new FileOutputStream(webPFile)) {
                 fos.write(webPImageData);
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
