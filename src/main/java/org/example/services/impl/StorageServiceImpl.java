@@ -80,7 +80,7 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
-    public Resource getProfileImage(String username) throws IOException {
+    public Resource getProfileImage(String username, String format) throws IOException {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
