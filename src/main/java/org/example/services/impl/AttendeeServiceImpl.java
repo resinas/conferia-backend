@@ -24,7 +24,7 @@ public class AttendeeServiceImpl implements AttendeeService {
     public Page<AttendeeResponse> getAttendees(Pageable pageable, String search) {
         Page<User> page;
         if (search != null && !search.trim().isEmpty()) {
-            page = userRepository.findBySearch(
+            page = userRepository.findByLastnameContainingOrFirstnameContainingOrCountryContainingOrCompanyContaining(
                     search, search, search, search, pageable
             );
         } else {
@@ -37,12 +37,11 @@ public class AttendeeServiceImpl implements AttendeeService {
         AttendeeResponse dto = new AttendeeResponse();
         dto.setFirstname(user.getFirstname());
         dto.setLastname(user.getLastname());
+        dto.setId(user.getId());
         if (Boolean.TRUE.equals(user.getSharingchoice())){
             dto.setAvatarpath(user.getAvatarPath());
             dto.setCompany(user.getCompany());
             dto.setCountry(user.getCountry());
-        } else {
-            dto.setAvatarpath("default path");
         }
         return dto;
     }

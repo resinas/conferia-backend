@@ -11,7 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-     Page<User> findBySearch(
+     Page<User> findByLastnameContainingOrFirstnameContainingOrCountryContainingOrCompanyContaining(
                 String lastname, String firstname, String country, String company, Pageable pageable);
 
 

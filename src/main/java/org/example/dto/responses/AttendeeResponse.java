@@ -9,5 +9,6 @@ public class AttendeeResponse {
     private String avatarpath;
     private String company;
     private String country;
+    private Integer Id;
 
 }
