@@ -18,6 +18,8 @@ public interface StorageService {
     GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest) throws MalformedURLException;
 
     GetSingleImageDataResponse getGalleryImageSingleData (String filepath, String username);
+
+    GetGalleryResponse getMyGalleryImagesMetadata(String username);
     Resource getGalleryImage(String filepath, String format);
 
     void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;

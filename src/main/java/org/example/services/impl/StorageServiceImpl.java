@@ -34,8 +34,10 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -128,6 +130,19 @@ public class StorageServiceImpl implements StorageService {
         return getSingleImageDataResponse;
 
     }
+
+    public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+
+        List<String> imagePaths = user.getGalleryImages().stream()
+                .map(GalleryImage::getPath)
+                .collect(Collectors.toList());
+        GetGalleryResponse getGalleryResponse = new GetGalleryResponse();
+        getGalleryResponse.setImagePaths(imagePaths);
+        return getGalleryResponse;
+    }
+
 
     public Resource getGalleryImage(String filepath, String format) {
         try {
