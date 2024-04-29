@@ -8,14 +8,12 @@ import org.example.entities.GalleryImage;
 import org.example.entities.User;
 import org.example.repository.GalleryStorageRepository;
 import org.example.repository.UserRepository;
-import org.example.services.StorageService;
 import org.example.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
 import java.util.Optional;
 
 @Service
@@ -24,8 +22,6 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final GalleryStorageRepository galleryStorageRepository;
-
-    private final StorageService storageService;
 
     @Override
     public UserDetailsService userDetailsService() {
@@ -37,7 +33,7 @@ public class UserServiceImpl implements UserService {
         };
     }
 
-    public GetUserResponse getModifiedUserDetails(UserDetails userDetails) throws IOException {
+    public GetUserResponse getModifiedUserDetails(UserDetails userDetails) {
         if (userDetails instanceof User user) {
             GetUserResponse getUserResponse = new GetUserResponse();
             getUserResponse.setEmail(user.getEmail());
@@ -58,21 +54,16 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
         Optional<GalleryImage> galleryImage = galleryStorageRepository.findByPath(filePath);
-        System.out.println("this is the filepath: " + filePath);
-        System.out.println("this is likes: " + likes);
 
         if (galleryImage.isPresent()) {
-            System.out.println("After isPresent");
             GalleryImage image = galleryImage.get();
 
             if (likes) {
                 if (!image.getLikedBy().contains(user)) {
-                    System.out.println("The picture is liked");
                     image.getLikedBy().add(user);
                     user.getLikes().add(image);
                 }
             } else {
-                System.out.println("The picture is not liked");
                 image.getLikedBy().remove(user);
                 user.getLikes().remove(image);
             }

@@ -3,6 +3,7 @@ package org.example.services.impl;
 
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
@@ -96,7 +97,7 @@ public class StorageServiceImpl implements StorageService {
         return resource;
     }
 
-    public GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest) throws MalformedURLException {
+    public GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest){
         try{
             Pageable pageable = PageRequest.of(getGalleryRequest.getPageNr(), getGalleryRequest.getPageSize(), Sort.by("uploadTime").descending());
 
@@ -134,7 +135,6 @@ public class StorageServiceImpl implements StorageService {
     public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
-
         List<String> imagePaths = user.getGalleryImages().stream()
                 .map(GalleryImage::getPath)
                 .collect(Collectors.toList());
@@ -148,7 +148,6 @@ public class StorageServiceImpl implements StorageService {
         try {
             Path basePath = Paths.get(storageDir, "Gallery");
             Path fileWebP = basePath.resolve(filepath + "." + format).normalize();
-
             Resource resourceWebP = new UrlResource(fileWebP.toUri());
             if (resourceWebP.exists() && resourceWebP.isReadable()) {
                 return resourceWebP;
@@ -161,7 +160,6 @@ public class StorageServiceImpl implements StorageService {
                     return null;
                 }
             }
-
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -197,8 +195,31 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException(e);
         }
     }
+    public void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-    public void deleteGalleryImage(String username, Integer imageId) {
+        List<GalleryImage> images = new ArrayList<>();
+        for (String path : deleteGalleryRequest.getImagePaths()) {
+            Optional<GalleryImage> image = galleryStorageRepository.findByPath(path);
+            if (image.isPresent() && image.get().getOwner().equals(user)) {
+                images.add(image.get());
+            }else {
+                throw new RuntimeException("Image at path " + path + " was not uploaded by the user: " + username);
+            }
+        }
+        galleryStorageRepository.deleteAll(images);
+
+        for (GalleryImage image : images) {
+            Path imagePath = Paths.get(storageDir, "Gallery", image.getPath() + ".jpg");
+            Path imageWebPPath = Paths.get(storageDir, "Gallery", image.getPath() + ".webp");
+            try {
+                Files.deleteIfExists(imagePath);
+                Files.deleteIfExists(imageWebPPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete image from local storage", e);
+            }
+        }
 
     }
 
