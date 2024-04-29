@@ -11,7 +11,7 @@ public interface UserService {
 
     UserDetailsService userDetailsService();
 
-    GetUserResponse getModifiedUserDetails(UserDetails userDetails) throws IOException;
+    GetUserResponse getModifiedUserDetails(UserDetails userDetails);
 
     void ChangeLikeStatusForGalleryImage(Boolean likes, String username, String filePath);
 
