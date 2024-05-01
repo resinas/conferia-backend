@@ -25,4 +25,6 @@ public interface StorageService {
     void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
 
     void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest);
+
+    void changeLikeStatusForGalleryImage(Boolean likes, String username, String filePath);
 }

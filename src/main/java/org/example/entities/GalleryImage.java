@@ -22,6 +22,11 @@ public class GalleryImage {
 
     private LocalDateTime uploadTime;
 
-    @ManyToMany(mappedBy = "likes")
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "image_likes",
+            joinColumns = @JoinColumn(name = "image_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
     private List<User> likedBy;
 }

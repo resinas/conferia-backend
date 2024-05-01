@@ -2,6 +2,8 @@ package org.example.services.impl;
 
 
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.GetGalleryRequest;
@@ -133,11 +135,13 @@ public class StorageServiceImpl implements StorageService {
     }
 
     public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
+        System.out.println("This is the username: " + username);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
         List<String> imagePaths = user.getGalleryImages().stream()
                 .map(GalleryImage::getPath)
                 .collect(Collectors.toList());
+
         GetGalleryResponse getGalleryResponse = new GetGalleryResponse();
         getGalleryResponse.setImagePaths(imagePaths);
         return getGalleryResponse;
@@ -195,22 +199,35 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException(e);
         }
     }
+    @Transactional
     public void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-        List<GalleryImage> images = new ArrayList<>();
+        List<GalleryImage> imagesToDelete = new ArrayList<>();
         for (String path : deleteGalleryRequest.getImagePaths()) {
-            Optional<GalleryImage> image = galleryStorageRepository.findByPath(path);
-            if (image.isPresent() && image.get().getOwner().equals(user)) {
-                images.add(image.get());
-            }else {
+            Optional<GalleryImage> imageOpt = galleryStorageRepository.findByPath(path);
+            if (imageOpt.isEmpty()) {
+                throw new RuntimeException("Image not found at path: " + path);
+            }
+            GalleryImage image = imageOpt.get();
+            if (!image.getOwner().equals(user)) {
                 throw new RuntimeException("Image at path " + path + " was not uploaded by the user: " + username);
             }
-        }
-        galleryStorageRepository.deleteAll(images);
+            // Remove the image from all users' likes
+            image.getLikedBy().forEach(u -> u.getLikes().remove(image));
+            image.getLikedBy().clear();
 
-        for (GalleryImage image : images) {
+            imagesToDelete.add(image);
+        }
+
+        // Save changes to detach the images from all related entities
+        galleryStorageRepository.saveAll(imagesToDelete);
+
+        // Delete images from the repository
+        galleryStorageRepository.deleteAll(imagesToDelete);
+
+        for (GalleryImage image : imagesToDelete) {
             Path imagePath = Paths.get(storageDir, "Gallery", image.getPath() + ".jpg");
             Path imageWebPPath = Paths.get(storageDir, "Gallery", image.getPath() + ".webp");
             try {
@@ -235,5 +252,27 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to convert image to WebP", e);
         }
+    }
+
+    @Transactional
+    public void changeLikeStatusForGalleryImage(Boolean likes, String username, String filePath) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+
+        Optional<GalleryImage> galleryImage = galleryStorageRepository.findByPath(filePath);
+        if (galleryImage.isEmpty()) {
+            throw new EntityNotFoundException("Gallery image not found with path: " + filePath);
+        }
+
+        GalleryImage image = galleryImage.get();
+        boolean isUserAlreadyLikes = image.getLikedBy().contains(user);
+
+        if (likes && !isUserAlreadyLikes) {
+            image.getLikedBy().add(user);
+        } else if (!likes && isUserAlreadyLikes) {
+            image.getLikedBy().remove(user);
+        }
+
+        galleryStorageRepository.save(image); // Saving image should suffice due to cascading and inverse relationship
     }
 }
