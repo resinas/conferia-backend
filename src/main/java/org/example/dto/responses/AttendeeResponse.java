@@ -6,7 +6,8 @@ import lombok.Data;
 public class AttendeeResponse {
     private String firstname;
     private String lastname;
-    private String avatarpath;
+    private String email;
+    private String avatar_path;
     private String company;
     private String country;
     private Integer Id;

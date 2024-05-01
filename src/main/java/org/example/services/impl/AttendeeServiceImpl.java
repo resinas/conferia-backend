@@ -39,7 +39,7 @@ public class AttendeeServiceImpl implements AttendeeService {
         dto.setLastname(user.getLastname());
         dto.setId(user.getId());
         if (Boolean.TRUE.equals(user.getSharingchoice())){
-            dto.setAvatarpath(user.getAvatarPath());
+            dto.setAvatar_path(user.getAvatar_path());
             dto.setCompany(user.getCompany());
             dto.setCountry(user.getCountry());
         }

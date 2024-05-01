@@ -88,13 +88,11 @@ public class AccountController {
 
     // Change profile picture
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @GetMapping("/getProfilePicture")
-    public ResponseEntity<Resource> getProfilePicture(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @RequestParam(name = "format") String format) throws IOException {
-        String token = authorizationHeader.substring(7);
-        String username = jwtService.extractUserName(token);
+    @GetMapping("/getProfilePicture/{id}")
+    public ResponseEntity<Resource> getProfilePicture(@PathVariable Integer id, @RequestParam(name = "format") String format) throws IOException {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
-                .body(storageService.getProfileImage(username, format));
+                .body(storageService.getProfileImage(id, format));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

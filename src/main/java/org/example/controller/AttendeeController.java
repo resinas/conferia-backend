@@ -37,10 +37,10 @@ public class AttendeeController {
 
     @GetMapping("/avatar/{username}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<Resource> getImage(@PathVariable String username, @RequestParam(name = "format") String format) throws IOException {
+    public ResponseEntity<Resource> getImage(@PathVariable Integer id, @RequestParam(name = "format") String format) throws IOException {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
-                .body(storageService.getProfileImage(username, format));
+                .body(storageService.getProfileImage(id, format));
     }
 
 }
