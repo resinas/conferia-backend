@@ -23,7 +23,7 @@ public class User implements UserDetails {
     private String company;
     private String country;
     private Boolean sharingchoice = false;
-    private String avatarPath;
+    private String avatar_path;
     @OneToMany(mappedBy = "owner")
     private List<GalleryImage> galleryImages;
     @Enumerated(EnumType.STRING)

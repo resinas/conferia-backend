@@ -52,9 +52,9 @@ public class StorageServiceImpl implements StorageService {
 
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
-        String objectName = "profilePicture/" + user.getId() + ".jpeg";
+        String objectName = "profilePicture/" + user.getId();
 
-        user.setAvatarPath(objectName);
+        user.setAvatar_path(objectName);
         userRepository.save(user);
 
         Path storageDirectory = Paths.get(storageDir + "/profilePictures");
@@ -80,17 +80,17 @@ public class StorageServiceImpl implements StorageService {
         }
     }
 
-    public Resource getProfileImage(String username) throws IOException {
+    public Resource getProfileImage(Integer id, String format) throws IOException {
 
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        Path path = Paths.get(storageDir + "/profilePictures", user.getId() + ".jpg");
+        Path path = Paths.get(storageDir + "/profilePictures", id + "." + format);
 
         Resource resource = new UrlResource(path.toUri());
 
         if (!resource.exists()) {
-            throw new RuntimeException("File not found " + user.getId() + ".jpg");
+            throw new RuntimeException("File not found " + user.getId() + format);
         }
 
         return resource;

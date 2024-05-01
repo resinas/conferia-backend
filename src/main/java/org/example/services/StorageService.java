@@ -13,7 +13,7 @@ import java.net.MalformedURLException;
 public interface StorageService {
     void storeProfileImage(MultipartFile file, String username) throws IOException;
 
-    Resource getProfileImage(String username) throws IOException;
+    Resource getProfileImage(Integer id, String format) throws IOException;
 
     GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest) throws MalformedURLException;
 

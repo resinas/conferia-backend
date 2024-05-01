@@ -46,7 +46,8 @@ public class UserServiceImpl implements UserService {
             getUserResponse.setCompany(user.getCompany());
             getUserResponse.setCountry(user.getCountry());
             getUserResponse.setSharingChoice(user.getSharingchoice());
-            getUserResponse.setProfilePicture(user.getAvatarPath());
+            getUserResponse.setProfilePicture(user.getAvatar_path());
+            getUserResponse.setId(user.getId());
             return getUserResponse;
         }
         throw new IllegalArgumentException("The provided userDetails cannot be cast to User");
