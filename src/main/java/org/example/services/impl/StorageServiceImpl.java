@@ -2,7 +2,10 @@ package org.example.services.impl;
 
 
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
@@ -96,7 +99,7 @@ public class StorageServiceImpl implements StorageService {
         return resource;
     }
 
-    public GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest) throws MalformedURLException {
+    public GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest){
         try{
             Pageable pageable = PageRequest.of(getGalleryRequest.getPageNr(), getGalleryRequest.getPageSize(), Sort.by("uploadTime").descending());
 
@@ -132,12 +135,13 @@ public class StorageServiceImpl implements StorageService {
     }
 
     public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
+        System.out.println("This is the username: " + username);
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
-
         List<String> imagePaths = user.getGalleryImages().stream()
                 .map(GalleryImage::getPath)
                 .collect(Collectors.toList());
+
         GetGalleryResponse getGalleryResponse = new GetGalleryResponse();
         getGalleryResponse.setImagePaths(imagePaths);
         return getGalleryResponse;
@@ -148,7 +152,6 @@ public class StorageServiceImpl implements StorageService {
         try {
             Path basePath = Paths.get(storageDir, "Gallery");
             Path fileWebP = basePath.resolve(filepath + "." + format).normalize();
-
             Resource resourceWebP = new UrlResource(fileWebP.toUri());
             if (resourceWebP.exists() && resourceWebP.isReadable()) {
                 return resourceWebP;
@@ -161,7 +164,6 @@ public class StorageServiceImpl implements StorageService {
                     return null;
                 }
             }
-
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         }
@@ -197,8 +199,44 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException(e);
         }
     }
+    @Transactional
+    public void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
-    public void deleteGalleryImage(String username, Integer imageId) {
+        List<GalleryImage> imagesToDelete = new ArrayList<>();
+        for (String path : deleteGalleryRequest.getImagePaths()) {
+            Optional<GalleryImage> imageOpt = galleryStorageRepository.findByPath(path);
+            if (imageOpt.isEmpty()) {
+                throw new RuntimeException("Image not found at path: " + path);
+            }
+            GalleryImage image = imageOpt.get();
+            if (!image.getOwner().equals(user)) {
+                throw new RuntimeException("Image at path " + path + " was not uploaded by the user: " + username);
+            }
+            // Remove the image from all users' likes
+            image.getLikedBy().forEach(u -> u.getLikes().remove(image));
+            image.getLikedBy().clear();
+
+            imagesToDelete.add(image);
+        }
+
+        // Save changes to detach the images from all related entities
+        galleryStorageRepository.saveAll(imagesToDelete);
+
+        // Delete images from the repository
+        galleryStorageRepository.deleteAll(imagesToDelete);
+
+        for (GalleryImage image : imagesToDelete) {
+            Path imagePath = Paths.get(storageDir, "Gallery", image.getPath() + ".jpg");
+            Path imageWebPPath = Paths.get(storageDir, "Gallery", image.getPath() + ".webp");
+            try {
+                Files.deleteIfExists(imagePath);
+                Files.deleteIfExists(imageWebPPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Failed to delete image from local storage", e);
+            }
+        }
 
     }
 
@@ -214,5 +252,27 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to convert image to WebP", e);
         }
+    }
+
+    @Transactional
+    public void changeLikeStatusForGalleryImage(Boolean likes, String username, String filePath) {
+        User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+
+        Optional<GalleryImage> galleryImage = galleryStorageRepository.findByPath(filePath);
+        if (galleryImage.isEmpty()) {
+            throw new EntityNotFoundException("Gallery image not found with path: " + filePath);
+        }
+
+        GalleryImage image = galleryImage.get();
+        boolean isUserAlreadyLikes = image.getLikedBy().contains(user);
+
+        if (likes && !isUserAlreadyLikes) {
+            image.getLikedBy().add(user);
+        } else if (!likes && isUserAlreadyLikes) {
+            image.getLikedBy().remove(user);
+        }
+
+        galleryStorageRepository.save(image); // Saving image should suffice due to cascading and inverse relationship
     }
 }

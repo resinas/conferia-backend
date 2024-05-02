@@ -1,7 +1,6 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.example.dto.requests.ChangeLikeStatusGalleryImageRequest;
 import org.example.dto.requests.ChangePasswordRequest;
 import org.example.dto.requests.JwtAuthenticationResponse;
 import org.example.dto.requests.RegisterRequest;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.net.URL;
 
 @RestController
 @RequestMapping("/api/v1/account")
@@ -43,7 +41,7 @@ public class AccountController {
 
     @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")
     @GetMapping("/userDetails")
-    public ResponseEntity<GetUserResponse> getUserDetails(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) throws IOException {
+    public ResponseEntity<GetUserResponse> getUserDetails(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
         UserDetails userDetails = userService.userDetailsService().loadUserByUsername(username);
@@ -95,14 +93,6 @@ public class AccountController {
                 .body(storageService.getProfileImage(id, format));
     }
 
-    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @PutMapping("/changeLikeStatusGalleyImage")
-    public ResponseEntity<String> changeLikeStatusForGalleryImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,@RequestBody ChangeLikeStatusGalleryImageRequest changeLikeStatusGalleryImageRequest) {
-        String token = authorizationHeader.substring(7);
-        String username = jwtService.extractUserName(token);
-        userService.ChangeLikeStatusForGalleryImage(changeLikeStatusGalleryImageRequest.getLikes(), username, changeLikeStatusGalleryImageRequest.getPath());
-        return ResponseEntity.ok("Like status changed");
-    }
 
 
 }

@@ -1,6 +1,8 @@
 package org.example.controller;
 
 import lombok.RequiredArgsConstructor;
+import org.example.dto.requests.ChangeLikeStatusGalleryImageRequest;
+import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
@@ -14,7 +16,6 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 
 @RestController
 @RequestMapping("/api/v1/gallery")
@@ -25,7 +26,7 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize) throws MalformedURLException {
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize) {
         GetGalleryRequest getGalleryRequest = new GetGalleryRequest();
         getGalleryRequest.setPageNr(pageNr);
         getGalleryRequest.setPageSize(pageSize);
@@ -60,16 +61,26 @@ public class GalleryController {
     public ResponseEntity<GetGalleryResponse> getMyGalleryImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
+        System.out.println("This is the username: " + username);
         return ResponseEntity.ok(storageService.getMyGalleryImagesMetadata(username));
 
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    @DeleteMapping("/images/{id}")
-    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @PathVariable Integer id) {
+    @DeleteMapping("/images")
+    public ResponseEntity<String> deleteImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,@RequestBody DeleteGalleryRequest deleteGalleryRequest) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        storageService.deleteGalleryImage(username,id);
-        return ResponseEntity.ok("The image was deleted successfully");
+        storageService.deleteGalleryImage(username, deleteGalleryRequest);
+        return ResponseEntity.ok("The image/images was deleted successfully");
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PutMapping("/changeLikeStatusGalleyImage")
+    public ResponseEntity<String> changeLikeStatusForGalleryImage(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,@RequestBody ChangeLikeStatusGalleryImageRequest changeLikeStatusGalleryImageRequest) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        storageService.changeLikeStatusForGalleryImage(changeLikeStatusGalleryImageRequest.getLikes(), username, changeLikeStatusGalleryImageRequest.getPath());
+        return ResponseEntity.ok("Like status changed");
     }
 }
