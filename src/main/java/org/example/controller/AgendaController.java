@@ -3,9 +3,11 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.SessionDTO;
 import org.example.dto.SessionHeaderDTO;
+import org.example.dto.requests.SessionLikeRequest;
 import org.example.entities.SessionHeader;
 import org.example.repository.SessionHeaderRepository;
 import org.example.services.AgendaService;
+import org.example.services.JWTService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +20,7 @@ import java.util.List;
 public class AgendaController {
     private final SessionHeaderRepository sessionHeaderRepository;
     private final AgendaService agendaService;
+    private final JWTService jwtService;
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/sessions")
@@ -45,4 +48,27 @@ public class AgendaController {
     public ResponseEntity<SessionHeader> updatePage (@PathVariable Long id, @RequestBody SessionDTO sessionDTO) {
         return ResponseEntity.ok(agendaService.update(sessionDTO, id));
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @PostMapping("/session/like")
+    public ResponseEntity<String> likeSession(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @RequestBody SessionLikeRequest sessionLikeRequest){
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        agendaService.changeLikeStatusForSession(sessionLikeRequest.getLikes(), username, sessionLikeRequest.getId());
+        return ResponseEntity.ok("Like Status Changed");
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @GetMapping("/session/likedlist/{id}")
+    public ResponseEntity<List<SessionHeaderDTO>> findLikedSessionsByUser(@PathVariable("id") Integer userId){
+        return ResponseEntity.ok(agendaService.findLikedSessionsByUser(userId));
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
+    @GetMapping("/session/hearts/{id}")
+    public ResponseEntity<List<Long>> HeartedSessions(@PathVariable("id") Integer userId){
+        return ResponseEntity.ok(agendaService.HeartedSessions(userId));
+    }
+
+
 }

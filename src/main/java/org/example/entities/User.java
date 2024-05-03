@@ -28,8 +28,18 @@ public class User implements UserDetails {
     private List<GalleryImage> galleryImages;
     @Enumerated(EnumType.STRING)
     private Role role;
+
     @ManyToMany(mappedBy = "likedBy")
     private List<GalleryImage> likes;
+
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "session_likes",
+            joinColumns = @JoinColumn(name = "sessionheader_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    private List<SessionHeader> likedBy;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
