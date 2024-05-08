@@ -140,8 +140,11 @@ public class AgendaServiceImpl implements AgendaService {
         );
     }
 
-    public List<Long> HeartedSessions (Integer userId) {
-        return sessionHeaderRepository.findSessionIdsLikedByUser(userId);
+    public List<Long> HeartedSessions (String userName) {
+        User user = userRepository.findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userName));
+
+        return sessionHeaderRepository.findSessionIdsLikedByUser(user.getId());
     }
 
 }

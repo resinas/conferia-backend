@@ -65,9 +65,11 @@ public class AgendaController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN', 'USER')")
-    @GetMapping("/session/hearts/{id}")
-    public ResponseEntity<List<Long>> HeartedSessions(@PathVariable("id") Integer userId){
-        return ResponseEntity.ok(agendaService.HeartedSessions(userId));
+    @GetMapping("/session/hearts")
+    public ResponseEntity<List<Long>> HeartedSessions(@RequestHeader(value = "Authorization", required = false) String authorizationHeader){
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(agendaService.HeartedSessions(username));
     }
 
 

@@ -6,6 +6,7 @@ import org.example.dto.requests.JwtAuthenticationResponse;
 import org.example.dto.requests.RegisterRequest;
 import org.example.dto.requests.UserRequest;
 import org.example.dto.responses.GetUserResponse;
+import org.example.dto.responses.UserIdResponse;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
 import org.example.services.StorageService;
@@ -37,6 +38,14 @@ public class AccountController {
     @GetMapping
     public ResponseEntity<String> sayHello(){
         return ResponseEntity.ok("Hi User");
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/id")
+    public ResponseEntity<UserIdResponse> getId(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(userService.getId(username));
     }
 
     @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")

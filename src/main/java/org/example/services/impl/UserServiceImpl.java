@@ -3,6 +3,7 @@ package org.example.services.impl;
 import lombok.RequiredArgsConstructor;
 
 import org.example.dto.responses.GetUserResponse;
+import org.example.dto.responses.UserIdResponse;
 import org.example.entities.User;
 import org.example.repository.GalleryStorageRepository;
 import org.example.repository.UserRepository;
@@ -43,5 +44,14 @@ public class UserServiceImpl implements UserService {
             return getUserResponse;
         }
         throw new IllegalArgumentException("The provided userDetails cannot be cast to User");
+    }
+
+    public UserIdResponse getId(String userName) {
+        User user = userRepository.findByEmail(userName)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userName));
+        UserIdResponse userIdResponse = new UserIdResponse();
+        userIdResponse.setId(user.getId());
+
+        return userIdResponse;
     }
 }

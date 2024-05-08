@@ -20,6 +20,6 @@ public interface AgendaService {
 
     List<SessionHeaderDTO> findLikedSessionsByUser(Integer userID);
 
-    List<Long> HeartedSessions (Integer userId);
+    List<Long> HeartedSessions (String userName);
 
     }
