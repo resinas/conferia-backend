@@ -58,12 +58,8 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/myImages")
-    public ResponseEntity<GetGalleryResponse> getMyGalleryImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
-        String token = authorizationHeader.substring(7);
-        String username = jwtService.extractUserName(token);
-        System.out.println("This is the username: " + username);
-        return ResponseEntity.ok(storageService.getMyGalleryImagesMetadata(username));
-
+    public ResponseEntity<GetGalleryResponse> getMyGalleryImages(@RequestParam Integer id) {
+        return ResponseEntity.ok(storageService.getMyGalleryImagesMetadata(id));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

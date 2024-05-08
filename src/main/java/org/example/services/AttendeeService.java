@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AttendeeService {
     Page<AttendeeResponse> getAttendees(Pageable pageable, String search);
+
+    AttendeeResponse getAttendee(Integer id);
 }

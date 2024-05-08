@@ -134,10 +134,10 @@ public class StorageServiceImpl implements StorageService {
 
     }
 
-    public GetGalleryResponse getMyGalleryImagesMetadata(String username) {
-        System.out.println("This is the username: " + username);
-        User user = userRepository.findByEmail(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
+    public GetGalleryResponse getMyGalleryImagesMetadata(Integer id) {
+        System.out.println("This is the id: " + id);
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
         List<String> imagePaths = user.getGalleryImages().stream()
                 .map(GalleryImage::getPath)
                 .collect(Collectors.toList());

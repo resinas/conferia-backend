@@ -34,13 +34,10 @@ public class AttendeeController {
         return ResponseEntity.ok(attendeeService.getAttendees(pageable, search));
     }
 
-
-    @GetMapping("/avatar/{username}")
+    @GetMapping("/{id}")
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
-    public ResponseEntity<Resource> getImage(@PathVariable Integer id, @RequestParam(name = "format") String format) throws IOException {
-        return ResponseEntity.ok()
-                .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
-                .body(storageService.getProfileImage(id, format));
+    public ResponseEntity<AttendeeResponse> getAttendee (@PathVariable Integer id) {
+        return ResponseEntity.ok(attendeeService.getAttendee(id));
     }
 
 }
