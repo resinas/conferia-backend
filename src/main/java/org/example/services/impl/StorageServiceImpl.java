@@ -90,10 +90,11 @@ public class StorageServiceImpl implements StorageService {
 
         Path path = Paths.get(storageDir + "/profilePictures", id + "." + format);
 
+
         Resource resource = new UrlResource(path.toUri());
 
         if (!resource.exists()) {
-            throw new RuntimeException("File not found " + user.getId() + format);
+            throw new RuntimeException("File not found " + user.getId() + "." + format);
         }
 
         return resource;
