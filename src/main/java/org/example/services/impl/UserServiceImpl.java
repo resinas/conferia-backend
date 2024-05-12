@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 
 import org.example.dto.responses.GetUserResponse;
 import org.example.dto.responses.UserIdResponse;
+import org.example.dto.responses.getNameResponse;
 import org.example.entities.User;
-import org.example.repository.GalleryStorageRepository;
 import org.example.repository.UserRepository;
 import org.example.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -53,5 +53,14 @@ public class UserServiceImpl implements UserService {
         userIdResponse.setId(user.getId());
 
         return userIdResponse;
+    }
+
+    public getNameResponse getName(int id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+        getNameResponse getNameResponse = new getNameResponse();
+        getNameResponse.setFirstname(user.getFirstname());
+        getNameResponse.setLastname(user.getLastname());
+        return getNameResponse;
     }
 }

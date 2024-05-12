@@ -7,6 +7,7 @@ import org.example.dto.requests.RegisterRequest;
 import org.example.dto.requests.UserRequest;
 import org.example.dto.responses.GetUserResponse;
 import org.example.dto.responses.UserIdResponse;
+import org.example.dto.responses.getNameResponse;
 import org.example.entities.User;
 import org.example.services.AuthenticationService;
 import org.example.services.StorageService;
@@ -100,6 +101,12 @@ public class AccountController {
         return ResponseEntity.ok()
                 .contentType(MediaType.IMAGE_JPEG) // or the appropriate content type
                 .body(storageService.getProfileImage(id, format));
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/getName/{id}")
+    public ResponseEntity<getNameResponse> getName(@PathVariable Integer id) {
+        return ResponseEntity.ok(userService.getName(id));
     }
 
 

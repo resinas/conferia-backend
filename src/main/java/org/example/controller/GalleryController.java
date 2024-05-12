@@ -3,7 +3,6 @@ package org.example.controller;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.ChangeLikeStatusGalleryImageRequest;
 import org.example.dto.requests.DeleteGalleryRequest;
-import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
@@ -26,11 +25,8 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize) {
-        GetGalleryRequest getGalleryRequest = new GetGalleryRequest();
-        getGalleryRequest.setPageNr(pageNr);
-        getGalleryRequest.setPageSize(pageSize);
-        return ResponseEntity.ok(storageService.getGalleryImagesMetadata(getGalleryRequest));
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize, @RequestParam String search, @RequestParam String filterChoice, @RequestParam boolean orderValue) {
+        return ResponseEntity.ok(storageService.getGalleryImagesMetadata(pageNr, pageSize, search, filterChoice, orderValue));
     }
 
 
