@@ -18,7 +18,7 @@ public interface StorageService {
 
     GetSingleImageDataResponse getGalleryImageSingleData (String filepath, String username);
 
-    GetGalleryResponse getMyGalleryImagesMetadata(Integer Id);
+    GetGalleryResponse getMyGalleryImagesMetadata(String username);
     Resource getGalleryImage(String filepath, String format);
 
     void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
