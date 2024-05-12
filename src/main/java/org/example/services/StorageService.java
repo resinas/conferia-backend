@@ -1,7 +1,6 @@
 package org.example.services;
 
 import org.example.dto.requests.DeleteGalleryRequest;
-import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
@@ -15,7 +14,7 @@ public interface StorageService {
 
     Resource getProfileImage(Integer id, String format) throws IOException;
 
-    GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest);
+    GetGalleryResponse getGalleryImagesMetadata(int pageNr, int pageSize, String search, String filterChoice, boolean orderValue);
 
     GetSingleImageDataResponse getGalleryImageSingleData (String filepath, String username);
 

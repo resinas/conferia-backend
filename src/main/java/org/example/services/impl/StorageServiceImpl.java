@@ -6,7 +6,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.requests.DeleteGalleryRequest;
-import org.example.dto.requests.GetGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
@@ -100,12 +99,17 @@ public class StorageServiceImpl implements StorageService {
         return resource;
     }
 
-    public GetGalleryResponse getGalleryImagesMetadata(GetGalleryRequest getGalleryRequest){
+    public GetGalleryResponse getGalleryImagesMetadata(int pageNr, int pageSize, String search, String filterChoice, boolean orderValue) {
         try{
-            Pageable pageable = PageRequest.of(getGalleryRequest.getPageNr(), getGalleryRequest.getPageSize(), Sort.by("uploadTime").descending());
+            Sort sort = Sort.unsorted();
+            if (filterChoice != null && filterChoice.equals("likes")) {
+                sort = Sort.by(Sort.Order.by("likeCount").with(orderValue ? Sort.Direction.ASC : Sort.Direction.DESC));
+            } else if (filterChoice != null && filterChoice.equals("uploadTime")) {
+                sort = Sort.by(Sort.Order.by("uploadTime").with(orderValue ? Sort.Direction.ASC : Sort.Direction.DESC));
+            }
+            Pageable pageable = PageRequest.of(pageNr, pageSize, sort);
 
-            // Fetch the page from the repository
-            Page<GalleryImage> page = galleryStorageRepository.findAll(pageable);
+            Page<GalleryImage> page = galleryStorageRepository.searchGalleryImages(search, pageable);
 
             List<String> imgPaths = page.getContent().stream().map(GalleryImage::getPath).toList();
 
@@ -269,9 +273,9 @@ public class StorageServiceImpl implements StorageService {
         boolean isUserAlreadyLikes = image.getLikedBy().contains(user);
 
         if (likes && !isUserAlreadyLikes) {
-            image.getLikedBy().add(user);
+            image.addLike(user);
         } else if (!likes && isUserAlreadyLikes) {
-            image.getLikedBy().remove(user);
+            image.removeLike(user);
         }
 
         galleryStorageRepository.save(image); // Saving image should suffice due to cascading and inverse relationship

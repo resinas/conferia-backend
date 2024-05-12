@@ -29,4 +29,16 @@ public class GalleryImage {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<User> likedBy;
+
+    private int likeCount;
+
+    public void addLike(User user) {
+        this.likedBy.add(user);
+        this.likeCount = this.likedBy.size(); // Update like count when adding a like
+    }
+
+    public void removeLike(User user) {
+        this.likedBy.remove(user);
+        this.likeCount = this.likedBy.size(); // Update like count when removing a like
+    }
 }
