@@ -6,6 +6,7 @@ import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
+import org.example.dto.responses.PostGalleryResponse;
 import org.example.services.JWTService;
 import org.example.services.StorageService;
 import org.springframework.core.io.Resource;
@@ -45,11 +46,10 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @PostMapping("/images")
-    public ResponseEntity<String> uploadImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, PostGalleryRequest postGalleryRequest) throws IOException {
+    public ResponseEntity<PostGalleryResponse> uploadImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, PostGalleryRequest postGalleryRequest) throws IOException {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        storageService.uploadGalleryImages(postGalleryRequest,username);
-        return ResponseEntity.ok("Pictures uploaded successfully");
+        return ResponseEntity.ok(storageService.uploadGalleryImages(postGalleryRequest,username));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

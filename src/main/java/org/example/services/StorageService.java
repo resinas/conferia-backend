@@ -4,6 +4,7 @@ import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
+import org.example.dto.responses.PostGalleryResponse;
 import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -21,7 +22,7 @@ public interface StorageService {
     GetGalleryResponse getMyGalleryImagesMetadata(String username);
     Resource getGalleryImage(String filepath, String format);
 
-    void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
+    PostGalleryResponse uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
 
     void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest);
 

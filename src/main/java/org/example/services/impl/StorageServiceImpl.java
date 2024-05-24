@@ -9,6 +9,7 @@ import org.example.dto.requests.DeleteGalleryRequest;
 import org.example.dto.requests.PostGalleryRequest;
 import org.example.dto.responses.GetGalleryResponse;
 import org.example.dto.responses.GetSingleImageDataResponse;
+import org.example.dto.responses.PostGalleryResponse;
 import org.example.entities.GalleryImage;
 import org.example.entities.User;
 import org.example.repository.GalleryStorageRepository;
@@ -172,7 +173,7 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException(e);
         }
     }
-        public void uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException {
+        public PostGalleryResponse uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
@@ -202,6 +203,8 @@ public class StorageServiceImpl implements StorageService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+        return new PostGalleryResponse(user.getId() + "-" + time);
+
     }
     @Transactional
     public void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest) {
