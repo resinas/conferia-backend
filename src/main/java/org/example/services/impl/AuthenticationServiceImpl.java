@@ -35,6 +35,14 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.save(user);
     }
 
+    public String deleteAccount(RegisterRequest registerRequest){
+        User user = userRepository.findByEmail(registerRequest.getEmail()).orElseThrow(() ->
+                new IllegalArgumentException("invalid email."));
+        userRepository.delete(user);
+
+        return "Account deleted.";
+    }
+
     public JwtAuthenticationResponse signin(SigninRequest signinRequest){
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(signinRequest.getEmail(),
                     signinRequest.getPassword()));

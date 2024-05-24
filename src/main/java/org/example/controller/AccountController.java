@@ -65,6 +65,12 @@ public class AccountController {
         return ResponseEntity.ok(authenticationService.register(registerRequest));
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/register")
+    public ResponseEntity<String> deleteAccount(@RequestBody RegisterRequest registerRequest){
+        return ResponseEntity.ok(authenticationService.deleteAccount(registerRequest));
+    }
+
     //Updating credentials:
     @PreAuthorize("hasAnyAuthority('INACTIVE', 'USER', 'ADMIN')")
     @PostMapping("/update")

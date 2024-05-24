@@ -24,6 +24,10 @@ public class PageServiceImpl implements PageService {
         return pageRepository.save(page);
     }
 
+    public void delete(Integer id) {
+        pageRepository.deleteById(id);
+    }
+
     public Optional<Page> findById(Integer id) {
         return pageRepository.findById(id);
     }

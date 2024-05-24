@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.SessionDTO;
 import org.example.dto.SessionHeaderDTO;
-import org.example.entities.GalleryImage;
 import org.example.entities.SessionContent;
 import org.example.entities.SessionHeader;
 import org.example.entities.User;
@@ -33,14 +32,7 @@ public class AgendaServiceImpl implements AgendaService {
     public List<SessionHeaderDTO> fetchAll() {
         List<SessionHeader> headers = sessionHeaderRepository.findAll();
         return headers.stream()
-                .map(header -> new SessionHeaderDTO(
-                        header.getId(),
-                        header.getName(),
-                        header.getHost(),
-                        header.getLocation(),
-                        header.getStartTime(),
-                        header.getEndTime(),
-                        header.getType()))
+                .map(SessionHeaderDTO::new)
                 .collect(Collectors.toList());
     }
 

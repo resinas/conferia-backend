@@ -7,6 +7,8 @@ public interface AuthenticationService {
 
     User register(RegisterRequest registerRequest);
 
+    String deleteAccount(RegisterRequest registerRequest);
+
     JwtAuthenticationResponse signin(SigninRequest signinRequest);
 
     JwtAuthenticationResponse refreshToken(RefreshTokenRequest refreshTokenRequest);

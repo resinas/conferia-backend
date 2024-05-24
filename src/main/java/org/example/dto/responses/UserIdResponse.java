@@ -4,5 +4,5 @@ import lombok.Data;
 
 @Data
 public class UserIdResponse {
-    Integer id;
+    private Integer id;
 }

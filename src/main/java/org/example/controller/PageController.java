@@ -32,7 +32,6 @@ public class PageController {
         return ResponseEntity.ok(pageService.update(pageRequest, id));
     }
 
-
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<Page> getPageById(@PathVariable Integer id) {
@@ -44,6 +43,13 @@ public class PageController {
     public ResponseEntity<List<Page>> getPages() {
         List<Page> pages = pageRepository.findAll();
         return ResponseEntity.ok(pages);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePage(@PathVariable Integer id) {
+        pageService.delete(id);
+        return ResponseEntity.ok("Page deleted with id: " + id);
     }
 
 }
