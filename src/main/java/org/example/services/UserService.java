@@ -17,4 +17,5 @@ public interface UserService {
 
     getNameResponse getName(int id);
 
+    getNameResponse getName(String username);
 }

@@ -44,7 +44,7 @@ public class AgendaController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/session/update/{id}")
+    @PutMapping("/session/update/{id}")
     public ResponseEntity<SessionHeader> updatePage (@PathVariable Long id, @RequestBody SessionDTO sessionDTO) {
         return ResponseEntity.ok(agendaService.update(sessionDTO, id));
     }

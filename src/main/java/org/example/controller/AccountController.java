@@ -115,6 +115,14 @@ public class AccountController {
         return ResponseEntity.ok(userService.getName(id));
     }
 
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/getName")
+    public ResponseEntity<getNameResponse> getMyName(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        return ResponseEntity.ok(userService.getName(username));
+    }
+
 
 
 }

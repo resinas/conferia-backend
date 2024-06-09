@@ -22,7 +22,7 @@ public interface StorageService {
     GetGalleryResponse getMyGalleryImagesMetadata(String username);
     Resource getGalleryImage(String filepath, String format);
 
-    PostGalleryResponse uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException;
+    PostGalleryResponse uploadGalleryImages(MultipartFile file, String username) throws IOException;
 
     void deleteGalleryImage(String username, DeleteGalleryRequest deleteGalleryRequest);
 

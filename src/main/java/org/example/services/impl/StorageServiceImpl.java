@@ -52,7 +52,6 @@ public class StorageServiceImpl implements StorageService {
     private String storageDir;
 
     public void storeProfileImage(MultipartFile file, String username) throws IOException {
-
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
         String objectName = "profilePicture/" + user.getId();
@@ -69,6 +68,8 @@ public class StorageServiceImpl implements StorageService {
 
         Path destinationFilePath = storageDirectory.resolve(user.getId() + ".jpg");
         Path destinationFilePathWebP = storageDirectory.resolve(user.getId() + ".webp");
+
+
 
         // Copy the file to the destination, replacing it if it already exists
         try {
@@ -173,11 +174,12 @@ public class StorageServiceImpl implements StorageService {
             throw new RuntimeException(e);
         }
     }
-        public PostGalleryResponse uploadGalleryImages(PostGalleryRequest postGalleryRequest, String username) throws IOException {
+        public PostGalleryResponse uploadGalleryImages(MultipartFile file, String username) throws IOException {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email : " + username));
 
         Path storageDirectory = Paths.get(storageDir,"Gallery");
+
         Files.createDirectories(storageDirectory);
 
         LocalDateTime localDateTime = LocalDateTime.now();
@@ -194,7 +196,7 @@ public class StorageServiceImpl implements StorageService {
         Path destinationPathWebP = storageDirectory.resolve(user.getId() + "-" + time + ".webp");
 
         try {
-            postGalleryRequest.getFile().transferTo(destinationPathJPG.toFile());
+            file.transferTo(destinationPathJPG.toFile());
             byte[] webPImageData = convertToWebP(destinationPathJPG.toFile());
             File webPFile = destinationPathWebP.toFile();
             try (FileOutputStream fos = new FileOutputStream(webPFile)) {

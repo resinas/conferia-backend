@@ -27,7 +27,7 @@ public class PageController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @PostMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<Page> updatePage (@PathVariable Integer id, @RequestBody PageRequest pageRequest) {
         return ResponseEntity.ok(pageService.update(pageRequest, id));
     }

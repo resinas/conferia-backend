@@ -14,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
@@ -26,7 +27,11 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam int pageNr, @RequestParam int pageSize, @RequestParam String search, @RequestParam String filterChoice, @RequestParam boolean orderValue) {
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam(required = false, defaultValue = "0") int pageNr,
+                                                                @RequestParam(required = false, defaultValue = "100") int pageSize,
+                                                                @RequestParam(required = false, defaultValue = "") String search,
+                                                                @RequestParam(required = false, defaultValue = "uploadTime") String filterChoice,
+                                                                @RequestParam(required = false, defaultValue = "true") boolean orderValue) {
         return ResponseEntity.ok(storageService.getGalleryImagesMetadata(pageNr, pageSize, search, filterChoice, orderValue));
     }
 
@@ -46,10 +51,10 @@ public class GalleryController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @PostMapping("/images")
-    public ResponseEntity<PostGalleryResponse> uploadImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, PostGalleryRequest postGalleryRequest) throws IOException {
+    public ResponseEntity<PostGalleryResponse> uploadImages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, MultipartFile file) throws IOException {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
-        return ResponseEntity.ok(storageService.uploadGalleryImages(postGalleryRequest,username));
+        return ResponseEntity.ok(storageService.uploadGalleryImages(file,username));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
