@@ -162,7 +162,7 @@ public class StorageServiceImpl implements StorageService {
             if (resourceWebP.exists() && resourceWebP.isReadable()) {
                 return resourceWebP;
             } else {
-                Path fileJpg = basePath.resolve(filepath + ".jpeg").normalize();
+                Path fileJpg = basePath.resolve(filepath + ".jpg").normalize();
                 Resource resourceJpg = new UrlResource(fileJpg.toUri());
                 if (resourceJpg.exists() && resourceJpg.isReadable()) {
                     return resourceJpg;

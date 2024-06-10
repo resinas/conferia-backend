@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService{
         message.setTo(emailRequest.getReceiver());
         message.setSubject("Authorization Email");
         String token =  jwtService.generateToken(userDetails);
-        message.setText("Here is your setup link: http://localhost:5173/icpm-navigator/#/auth/register/" + token);
+        message.setText("Here is your setup link: https://localhost:5173/icpm-navigator/#/auth/register/" + token);
         mailSender.send(message);
     }
 
@@ -54,7 +54,7 @@ public class EmailServiceImpl implements EmailService{
         message.setTo(emailRequest.getReceiver());
         message.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
-        message.setText("Here is your setup link: http://localhost:5173/icpm-navigator/#/auth/login/resetpassword/" + token);
+        message.setText("Use this link to reset your password: https://localhost:5173/icpm-navigator/#/auth/login/resetpassword/" + token);
         mailSender.send(message);
     }
 }

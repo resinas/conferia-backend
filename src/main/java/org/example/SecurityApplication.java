@@ -30,6 +30,8 @@ public class SecurityApplication implements CommandLineRunner {
             user.setRole(Role.ADMIN);
             user.setPassword(new BCryptPasswordEncoder().encode("admin"));
 
+
+
             userRepository.save(user);
         }
     }
