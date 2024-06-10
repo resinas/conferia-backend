@@ -41,9 +41,20 @@ public class User implements UserDetails {
     )
     private List<SessionHeader> likedBy;
 
+    public User() {
+    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));
+    }
+    public User(String country, String company, String email, String firstname, String lastname, Boolean sharingchoice) {
+        this.country = country;
+        this.company = company;
+        this.email = email;
+        this.firstname = firstname;
+        this.lastname = lastname;
+        this.sharingchoice = sharingchoice;
     }
 
     @Override

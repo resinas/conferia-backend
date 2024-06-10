@@ -1,5 +1,4 @@
 package org.example.entities;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -27,4 +26,15 @@ public class SessionHeader {
     @OneToOne(mappedBy = "header", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private SessionContent content;
 
+    public SessionHeader(LocalDateTime of, LocalDateTime of1, String alice, String mainHall, String openingKeynote, SessionType type) {
+        this.startTime = of;
+        this.endTime = of1;
+        this.host = alice;
+        this.location = mainHall;
+        this.name = openingKeynote;
+        this.type = type;
+    }
+
+    public SessionHeader() {
+    }
 }

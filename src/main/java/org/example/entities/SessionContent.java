@@ -23,4 +23,12 @@ public class SessionContent {
         @JsonIgnore
         private SessionHeader header;
 
+        public SessionContent(String content, SessionHeader header) {
+                this.content = content;
+                this.header = header;
+        }
+
+        public SessionContent() {
+
+        }
 }

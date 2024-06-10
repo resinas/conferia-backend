@@ -16,4 +16,14 @@ public class Page {
     private String content;
     private Integer layoutId;
 
+    public Page(String messagesFromOrganizers, Integer l1, String s) {
+        this.title = messagesFromOrganizers;
+        this.layoutId = l1;
+        this.content = s;
+
+    }
+
+    public Page() {
+
+    }
 }
