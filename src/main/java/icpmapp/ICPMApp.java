@@ -5,7 +5,6 @@ import icpmapp.repository.PageRepository;
 import icpmapp.repository.SessionContentRepository;
 import icpmapp.repository.SessionHeaderRepository;
 import icpmapp.repository.UserRepository;
-import icpmapp.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -17,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 
 
 @SpringBootApplication
-public class SecurityApplication implements CommandLineRunner {
+public class ICPMApp implements CommandLineRunner {
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -28,7 +27,7 @@ public class SecurityApplication implements CommandLineRunner {
     private SessionContentRepository sessionContentRepository;
     public static void main(String[] args) {
 
-        SpringApplication.run(SecurityApplication.class, args);
+        SpringApplication.run(ICPMApp.class, args);
     }
 
     public void run(String... args){
