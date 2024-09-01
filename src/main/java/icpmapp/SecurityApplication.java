@@ -5,7 +5,7 @@ import icpmapp.repository.PageRepository;
 import icpmapp.repository.SessionContentRepository;
 import icpmapp.repository.SessionHeaderRepository;
 import icpmapp.repository.UserRepository;
-import org.example.entities.*;
+import icpmapp.entities.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

@@ -2,7 +2,7 @@ package icpmapp.services;
 
 import icpmapp.dto.requests.*;
 import icpmapp.entities.User;
-import org.example.dto.requests.*;
+import icpmapp.dto.requests.*;
 
 public interface AuthenticationService {
 

@@ -4,7 +4,7 @@ import icpmapp.dto.requests.*;
 import icpmapp.entities.User;
 import icpmapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.requests.*;
+import icpmapp.dto.requests.*;
 import icpmapp.entities.Role;
 import icpmapp.services.AuthenticationService;
 import icpmapp.services.JWTService;
