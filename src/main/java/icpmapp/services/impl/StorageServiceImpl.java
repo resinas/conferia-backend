@@ -195,7 +195,8 @@ public class StorageServiceImpl implements StorageService {
         Path destinationPathWebP = storageDirectory.resolve(user.getId() + "-" + time + ".webp");
 
         try {
-            file.transferTo(destinationPathJPG.toFile());
+//            file.transferTo(destinationPathJPG.toFile());
+            Files.copy(file.getInputStream(), destinationPathJPG);
             byte[] webPImageData = convertToWebP(destinationPathJPG.toFile());
             File webPFile = destinationPathWebP.toFile();
             try (FileOutputStream fos = new FileOutputStream(webPFile)) {

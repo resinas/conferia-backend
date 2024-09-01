@@ -1,10 +1,7 @@
 package icpmapp;
 
 import icpmapp.entities.*;
-import icpmapp.repository.PageRepository;
-import icpmapp.repository.SessionContentRepository;
-import icpmapp.repository.SessionHeaderRepository;
-import icpmapp.repository.UserRepository;
+import icpmapp.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
@@ -21,6 +18,8 @@ public class ICPMApp implements CommandLineRunner {
     private UserRepository userRepository;
     @Autowired
     private PageRepository pageRepository;
+    @Autowired
+    private MessageRepository messageRepository;
     @Autowired
     private SessionHeaderRepository sessionHeaderRepository;
     @Autowired
@@ -46,6 +45,13 @@ public class ICPMApp implements CommandLineRunner {
             pageRepository.save(new Page("Travelling Information", 1, "<h5>Travelling</h5><p>Below you can find a map where the main points are highlighted: the airport, the city center main stop and DTU’s main bus stop. To travel between the airport and the city center there is a single metro line. To travel between the city center and DTU the easiest way is using the bus line 150S (which runs every 10 minutes in both directions).</p><p><strong>How to get to Copenhagen City Center from Copenhagen Airport</strong><br>Take the Metro Line M2 destination <em>Vanløse</em> to <em>Nørreport Station</em>. We encourage you to travel on public transportation to lower your carbon footprint.</p><p><strong>How to get to DTU from Copenhagen City Center</strong><br>From the area around Kongens Nytorv: Take the Metro or walk to <em>Nørreport Station</em> and take either bus line 150S destination <em>Kokkedal St.</em>, departing from above ground. Get off at <em>Rævehøjvej, DTU</em>, and walk to the Campus.</p><p>From the area around Copenhagen City Hall and Copenhagen Central Station (Vesterbro): Walk to Copenhagen Central Station and take the S-train line A destination <em>Hillerød St</em>., get off at <em>Lyngby Station </em>and change to bus line 40E destination <em>Rævehøjvej, DTU, </em>get off at the terminus and walk to the Campus.</p><p>Walking direction from bus stop <em>Rævehøjvej, DTU</em> to building 116 (6 minutes):</p><div class=\"wp-block-image\"><figure class=\"aligncenter size-full is-resized\"><a href=\"https://maps.app.goo.gl/oStjnqokKJHViiX77\" target=\"_blank\" rel=\"noopener\"><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/09/map.jpg\" alt=\"\"  srcset=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/09/map.jpg 827w, https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/09/map-300x182.jpg 300w, https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/09/map-768x467.jpg 768w\" /></a></figure></div><p><strong>Travel Card (Rejsekort)</strong><br>Rejsekort (Travel Card) is a prepaid card for taking public transportations in Denmark. You can obtain an anonymous card in convenient stores or at Rejsekort machines. We suggest you buy your Rejsekort at the airport, since you might find Rejsekort machines outside airport running out of new anonymous cards prepared to be purchased very often.</p>"));
             pageRepository.save(new Page("Conference Venue", 1, "<p>The conference will take place in the heart of the city, offering easy access to various amenities and cultural landmarks. Stay tuned for more details.</p>"));
             pageRepository.save(new Page("Food Information", 1, "<p>Our event will cater to a variety of dietary needs, including vegetarian, vegan, and gluten-free options. More details on meal times and options will be provided closer to the event date.</p>"));
+
+            Message m1 = new Message();
+            m1.setAuthor(user);
+            m1.setTitle("Welcome to ICPM 2024!");
+            m1.setText("We are excited to welcome you to the 2024 International Conference on Process Mining. Stay tuned for more updates and information about the event.");
+            m1.setCreationTime(LocalDateTime.now());
+            messageRepository.save(m1);
 
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 

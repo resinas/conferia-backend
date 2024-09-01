@@ -18,7 +18,7 @@ public class Message {
     @JoinColumn(name = "author")
     private User author;
 
-    private String path;
+    private String title;
     private String text;
     private LocalDateTime creationTime;
 }
