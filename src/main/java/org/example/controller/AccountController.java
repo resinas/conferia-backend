@@ -26,6 +26,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/account")
 @RequiredArgsConstructor
+@CrossOrigin
 public class AccountController {
 
     private final JWTService jwtService;

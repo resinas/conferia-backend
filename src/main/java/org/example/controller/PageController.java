@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/pages")
 @RequiredArgsConstructor
+@CrossOrigin
 public class PageController {
     private final PageService pageService;
     private final PageRepository pageRepository;

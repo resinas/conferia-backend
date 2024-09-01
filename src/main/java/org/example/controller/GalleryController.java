@@ -21,6 +21,7 @@ import java.io.IOException;
 @RestController
 @RequestMapping("/api/v1/gallery")
 @RequiredArgsConstructor
+@CrossOrigin
 public class GalleryController {
     private final StorageService storageService;
     private final JWTService jwtService;
