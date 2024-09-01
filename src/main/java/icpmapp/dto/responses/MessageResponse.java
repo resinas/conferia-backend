@@ -12,5 +12,6 @@ public class MessageResponse {
     private String title;
     private String message;
     private String author;
+    private String avatar;
     private LocalDateTime date;
 }

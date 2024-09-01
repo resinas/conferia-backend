@@ -63,6 +63,7 @@ public class MessageServiceImpl implements MessageService {
         resp.setTitle(msg.getTitle());
         resp.setMessage(msg.getText());
         resp.setAuthor(msg.getAuthor().getFirstname() + " " + msg.getAuthor().getLastname());
+        resp.setAvatar(msg.getAuthor().getAvatar_path());
         resp.setDate(msg.getCreationTime());
         return resp;
     }
