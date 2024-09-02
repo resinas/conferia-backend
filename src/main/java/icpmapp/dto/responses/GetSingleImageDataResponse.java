@@ -7,4 +7,5 @@ public class GetSingleImageDataResponse {
     private Boolean hasLiked;
     private String imageAuthor;
     private int imageLikes;
+    private int authorId;
 }

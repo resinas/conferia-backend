@@ -84,19 +84,13 @@ public class StorageServiceImpl implements StorageService {
     }
 
     public Resource getProfileImage(Integer id, String format) throws IOException {
-
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
         Path path = Paths.get(storageDir + "/profilePictures", id + "." + format);
-
-
         Resource resource = new UrlResource(path.toUri());
-
         if (!resource.exists()) {
-            throw new RuntimeException("File not found " + user.getId() + "." + format);
+            return null;
         }
-
         return resource;
     }
 
@@ -134,7 +128,7 @@ public class StorageServiceImpl implements StorageService {
             getSingleImageDataResponse.setImageAuthor(image.getOwner().getFirstname() + " " + image.getOwner().getLastname());
             getSingleImageDataResponse.setImageLikes(image.getLikedBy().size());
             getSingleImageDataResponse.setHasLiked(image.getLikedBy().contains(user));
-
+            getSingleImageDataResponse.setAuthorId(image.getOwner().getId());
         }
         return getSingleImageDataResponse;
 

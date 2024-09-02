@@ -12,6 +12,7 @@ public class MessageResponse {
     private String title;
     private String message;
     private String author;
-    private String avatar;
+    private Integer authorId;
+    private Integer avatar;
     private LocalDateTime date;
 }
