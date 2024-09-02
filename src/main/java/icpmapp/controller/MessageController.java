@@ -1,12 +1,10 @@
 package icpmapp.controller;
 
-import icpmapp.dto.requests.JwtAuthenticationResponse;
 import icpmapp.dto.requests.MessageRequest;
-import icpmapp.dto.requests.PageRequest;
 import icpmapp.dto.responses.MessageResponse;
 import icpmapp.entities.Message;
-import icpmapp.entities.Page;
-import icpmapp.repository.MessageRepository;
+import icpmapp.entities.User;
+import icpmapp.repository.UserRepository;
 import icpmapp.services.JWTService;
 import icpmapp.services.MessageService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +20,7 @@ import java.util.List;
 @CrossOrigin
 public class MessageController {
 
+    private final UserRepository userRepository;
     private final MessageService messageService;
     private final JWTService jwtService;
 
@@ -39,5 +38,22 @@ public class MessageController {
     @GetMapping
     public ResponseEntity<List<MessageResponse>> getMessages() {
         return ResponseEntity.ok(messageService.getMessages());
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteMessage(
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+            @PathVariable Integer id) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new IllegalArgumentException("invalid email."));
+
+        if (messageService.delete(id, user)) {
+            return ResponseEntity.ok("Message deleted.");
+        }
+        return ResponseEntity.badRequest().body("Message not deleted.");
     }
 }

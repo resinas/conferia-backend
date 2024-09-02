@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -48,13 +49,13 @@ public class MessageServiceImpl implements MessageService {
     }
 
     @Override
-    public void delete(Integer id) {
-
-    }
-
-    @Override
-    public Optional<Message> findById(Integer id) {
-        return Optional.empty();
+    public boolean delete(Integer id, User userRequestingDelete) {
+        Optional<Message> msg = messageRepository.findById(id);
+        if (msg.isPresent() && (msg.get().getAuthor().getId() == userRequestingDelete.getId())) {
+            messageRepository.deleteById(id);
+            return true;
+        }
+        return false;
     }
 
     private MessageResponse convertToDto(Message msg) {
