@@ -17,8 +17,8 @@ public interface UserRepository extends JpaRepository<User, Integer> {
                 String lastname, String firstname, String country, String company, Pageable pageable);
 
     @Query("SELECT u FROM User u WHERE " +
-            "(u.firstname LIKE %:search% OR u.lastname LIKE %:search%) OR " +
-            "((u.company LIKE %:search% OR u.country LIKE %:search%) AND u.sharingchoice = TRUE)")
+            "(LOWER(u.firstname) LIKE %:search% OR LOWER(u.lastname) LIKE %:search%) OR " +
+            "((LOWER(u.company) LIKE %:search% OR LOWER(u.country) LIKE %:search%) AND u.sharingchoice = TRUE)")
     Page<User> searchWithConditionalPrivacy(@Param("search") String search, Pageable pageable);
 
     Optional<User> findByEmail(String email);

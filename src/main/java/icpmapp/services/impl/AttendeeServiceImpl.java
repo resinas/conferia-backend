@@ -21,7 +21,7 @@ public class AttendeeServiceImpl implements AttendeeService {
     public Page<AttendeeResponse> getAttendees(Pageable pageable, String search) {
         Page<User> page;
         if (search != null && !search.trim().isEmpty()) {
-            page = userRepository.searchWithConditionalPrivacy(search, pageable);
+            page = userRepository.searchWithConditionalPrivacy(search.toLowerCase(), pageable);
         } else {
             page = userRepository.findAll(pageable);
         }
