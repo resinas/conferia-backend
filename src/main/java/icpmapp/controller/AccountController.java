@@ -7,7 +7,7 @@ import icpmapp.dto.requests.RegisterRequest;
 import icpmapp.dto.requests.UserRequest;
 import icpmapp.dto.responses.GetUserResponse;
 import icpmapp.dto.responses.UserIdResponse;
-import icpmapp.dto.responses.getNameResponse;
+import icpmapp.dto.responses.UsernameResponse;
 import icpmapp.entities.User;
 import icpmapp.services.AuthenticationService;
 import icpmapp.services.StorageService;
@@ -111,13 +111,13 @@ public class AccountController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/getName/{id}")
-    public ResponseEntity<getNameResponse> getName(@PathVariable Integer id) {
+    public ResponseEntity<UsernameResponse> getName(@PathVariable Integer id) {
         return ResponseEntity.ok(userService.getName(id));
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/getName")
-    public ResponseEntity<getNameResponse> getMyName(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+    public ResponseEntity<UsernameResponse> getMyName(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
         String token = authorizationHeader.substring(7);
         String username = jwtService.extractUserName(token);
         return ResponseEntity.ok(userService.getName(username));

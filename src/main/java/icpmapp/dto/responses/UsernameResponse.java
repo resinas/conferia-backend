@@ -3,7 +3,7 @@ package icpmapp.dto.responses;
 import lombok.Data;
 
 @Data
-public class getNameResponse {
+public class UsernameResponse {
     String firstname;
     String lastname;
 }

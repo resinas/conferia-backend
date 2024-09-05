@@ -8,6 +8,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -31,11 +32,8 @@ public class User implements UserDetails {
     private List<GalleryImage> galleryImages;
     @Enumerated(EnumType.STRING)
     private Role role;
-
     @ManyToMany(mappedBy = "likedBy", fetch = FetchType.LAZY)
     private List<GalleryImage> likes;
-
-
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "session_likes",
@@ -43,9 +41,10 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<SessionHeader> likedBy;
+    private LocalDateTime lastDownloadMessages;
+    private LocalDateTime lastDownloadPictures;
 
-    public User() {
-    }
+    public User() { }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

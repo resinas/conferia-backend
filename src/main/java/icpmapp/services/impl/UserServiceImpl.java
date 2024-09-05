@@ -2,7 +2,7 @@ package icpmapp.services.impl;
 
 import icpmapp.dto.responses.GetUserResponse;
 import icpmapp.dto.responses.UserIdResponse;
-import icpmapp.dto.responses.getNameResponse;
+import icpmapp.dto.responses.UsernameResponse;
 import icpmapp.entities.User;
 import icpmapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,6 +46,11 @@ public class UserServiceImpl implements UserService {
         throw new IllegalArgumentException("The provided userDetails cannot be cast to User");
     }
 
+    public User getUser(String username) {
+        return userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + username));
+    }
+
     public UserIdResponse getId(String userName) {
         User user = userRepository.findByEmail(userName)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with email: " + userName));
@@ -55,19 +60,19 @@ public class UserServiceImpl implements UserService {
         return userIdResponse;
     }
 
-    public getNameResponse getName(int id) {
+    public UsernameResponse getName(int id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
-        getNameResponse getNameResponse = new getNameResponse();
+        UsernameResponse getNameResponse = new UsernameResponse();
         getNameResponse.setFirstname(user.getFirstname());
         getNameResponse.setLastname(user.getLastname());
         return getNameResponse;
     }
 
-    public getNameResponse getName(String username) {
+    public UsernameResponse getName(String username) {
         User user = userRepository.findByEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + username));
-        getNameResponse getNameResponse = new getNameResponse();
+        UsernameResponse getNameResponse = new UsernameResponse();
         getNameResponse.setFirstname(user.getFirstname());
         getNameResponse.setLastname(user.getLastname());
         return getNameResponse;

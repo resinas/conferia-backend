@@ -1,5 +1,8 @@
 package icpmapp.controller;
 
+import icpmapp.entities.User;
+import icpmapp.repository.UserRepository;
+import icpmapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import icpmapp.dto.requests.ChangeLikeStatusGalleryImageRequest;
 import icpmapp.dto.requests.DeleteGalleryRequest;
@@ -16,21 +19,31 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/gallery")
 @RequiredArgsConstructor
 public class GalleryController {
+
+    private final UserService userService;
+    private final UserRepository userRepository;
     private final StorageService storageService;
     private final JWTService jwtService;
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping("/images")
-    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestParam(required = false, defaultValue = "0") int pageNr,
+    public ResponseEntity<GetGalleryResponse> getImagesMetaData(@RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+                                                                @RequestParam(required = false, defaultValue = "0") int pageNr,
                                                                 @RequestParam(required = false, defaultValue = "100") int pageSize,
                                                                 @RequestParam(required = false, defaultValue = "") String search,
                                                                 @RequestParam(required = false, defaultValue = "uploadTime") String filterChoice,
                                                                 @RequestParam(required = false, defaultValue = "true") boolean orderValue) {
+        String token = authorizationHeader.substring(7);
+        User currentUser = userService.getUser(jwtService.extractUserName(token));
+        currentUser.setLastDownloadPictures(LocalDateTime.now());
+        userRepository.save(currentUser);
+
         return ResponseEntity.ok(storageService.getGalleryImagesMetadata(pageNr, pageSize, search, filterChoice, orderValue));
     }
 

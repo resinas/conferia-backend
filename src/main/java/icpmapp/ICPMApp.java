@@ -95,27 +95,28 @@ public class ICPMApp implements CommandLineRunner {
 
 
 
-            userRepository.save(new User("USA", "TechGiant", "john.doe@techgiant.com", "John", "Doe", true));
-            userRepository.save(new User("Canada", "MapleTech", "alice.smith@mapletech.com", "Alice", "Smith", false));
-            userRepository.save(new User("UK", "LondonBiz", "bob.brown@londonbiz.com", "Bob", "Brown", true));
-            userRepository.save(new User("USA", "TechGiant", "carol.jones@techgiant.com", "Carol", "Jones", true));
-            userRepository.save(new User("Germany", "AutoBuild", "david.lee@autobuild.com", "David", "Lee", false));
-            userRepository.save(new User("France", "ParisInc", "eva.white@parisinc.com", "Eva", "White", true));
-            userRepository.save(new User("USA", "HealthPlus", "frank.black@healthplus.com", "Frank", "Black", false));
-            userRepository.save(new User("Canada", "MapleTech", "grace.green@mapletech.com", "Grace", "Green", true));
-            userRepository.save(new User("UK", "TechGiant", "harry.taylor@techgiant.co.uk", "Harry", "Taylor", false));
-            userRepository.save(new User("Germany", "AutoBuild", "isabella.wilson@autobuild.com", "Isabella", "Wilson", true));
-            userRepository.save(new User("France", "Foodies", "jason.martin@foodies.fr", "Jason", "Martin", false));
-            userRepository.save(new User("USA", "BeveragesCo", "karen.hall@beveragesco.com", "Karen", "Hall", true));
-            userRepository.save(new User("Canada", "HealthPlus", "louis.clark@healthplus.ca", "Louis", "Clark", false));
-            userRepository.save(new User("UK", "LondonBiz", "maria.lewis@londonbiz.com", "Maria", "Lewis", true));
-            userRepository.save(new User("USA", "TechGiant", "noah.allen@techgiant.com", "Noah", "Allen", false));
-            userRepository.save(new User("Germany", "BerlinTech", "olivia.scott@berlintech.de", "Olivia", "Scott", true));
-            userRepository.save(new User("France", "ParisInc", "peter.young@parisinc.com", "Peter", "Young", false));
-            userRepository.save(new User("Canada", "MapleTech", "quinn.edwards@mapletech.com", "Quinn", "Edwards", true));
-            userRepository.save(new User("UK", "BakerGoods", "rachel.moore@bakergoods.co.uk", "Rachel", "Moore", false));
-            userRepository.save(new User("USA", "BeveragesCo", "samuel.walker@beveragesco.com", "Samuel", "Walker", true));
-
+            for (int i = 0; i < 10; i++) {
+                userRepository.save(new User("USA", "TechGiant", i+"john.doe@techgiant.com", "John", i+"Doe", i%2==0));
+                userRepository.save(new User("Canada", "MapleTech", i+"alice.smith@mapletech.com", "Alice", i+"Smith", i%2==0));
+                userRepository.save(new User("UK", "LondonBiz", i+"bob.brown@londonbiz.com", "Bob", i+"Brown", i%2==0));
+                userRepository.save(new User("USA", "TechGiant", i+"carol.jones@techgiant.com", "Carol", i+"Jones", i%2==0));
+                userRepository.save(new User("Germany", "AutoBuild", i+"david.lee@autobuild.com", "David", i+"Lee", i%2==0));
+                userRepository.save(new User("France", "ParisInc", i+"eva.white@parisinc.com", "Eva", i+"White", i%2==0));
+                userRepository.save(new User("USA", "HealthPlus", i+"frank.black@healthplus.com", "Frank", i+"Black", i%2==0));
+                userRepository.save(new User("Canada", "MapleTech", i+"grace.green@mapletech.com", "Grace", i+"Green", i%2==0));
+                userRepository.save(new User("UK", "TechGiant", i+"harry.taylor@techgiant.co.uk", "Harry", i+"Taylor", i%2==0));
+                userRepository.save(new User("Germany", "AutoBuild", i+"isabella.wilson@autobuild.com", "Isabella", i+"Wilson", i%2==0));
+                userRepository.save(new User("France", "Foodies", i+"jason.martin@foodies.fr", "Jason", i+"Martin", i%2==0));
+                userRepository.save(new User("USA", "BeveragesCo", i+"karen.hall@beveragesco.com", "Karen", i+"Hall", i%2==0));
+                userRepository.save(new User("Canada", "HealthPlus", i+"louis.clark@healthplus.ca", "Louis", i+"Clark", i%2==0));
+                userRepository.save(new User("UK", "LondonBiz", i+"maria.lewis@londonbiz.com", "Maria", i+"Lewis", i%2==0));
+                userRepository.save(new User("USA", "TechGiant", i+"noah.allen@techgiant.com", "Noah", i+"Allen", i%2==0));
+                userRepository.save(new User("Germany", "BerlinTech", i+"olivia.scott@berlintech.de", "Olivia", i+"Scott", i%2==0));
+                userRepository.save(new User("France", "ParisInc", i+"peter.young@parisinc.com", "Peter", i+"Young", i%2==0));
+                userRepository.save(new User("Canada", "MapleTech", i+"quinn.edwards@mapletech.com", "Quinn", i+"Edwards", i%2==0));
+                userRepository.save(new User("UK", "BakerGoods", i+"rachel.moore@bakergoods.co.uk", "Rachel", i+"Moore", i%2==0));
+                userRepository.save(new User("USA", "BeveragesCo", i+"samuel.walker@beveragesco.com", "Samuel", i+"Walker", i%2==0));
+            }
         }
     }
 }

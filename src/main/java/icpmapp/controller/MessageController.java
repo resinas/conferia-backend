@@ -7,11 +7,13 @@ import icpmapp.entities.User;
 import icpmapp.repository.UserRepository;
 import icpmapp.services.JWTService;
 import icpmapp.services.MessageService;
+import icpmapp.services.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -19,6 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageController {
 
+    private final UserService userService;
     private final UserRepository userRepository;
     private final MessageService messageService;
     private final JWTService jwtService;
@@ -35,7 +38,12 @@ public class MessageController {
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
     @GetMapping
-    public ResponseEntity<List<MessageResponse>> getMessages() {
+    public ResponseEntity<List<MessageResponse>> getMessages(@RequestHeader(value = "Authorization", required = false) String authorizationHeader) {
+        String token = authorizationHeader.substring(7);
+        User currentUser = userService.getUser(jwtService.extractUserName(token));
+        currentUser.setLastDownloadMessages(LocalDateTime.now());
+        userRepository.save(currentUser);
+
         return ResponseEntity.ok(messageService.getMessages());
     }
 
