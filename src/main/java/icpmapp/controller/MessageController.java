@@ -17,7 +17,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/message")
 @RequiredArgsConstructor
-@CrossOrigin
 public class MessageController {
 
     private final UserRepository userRepository;

@@ -2,6 +2,9 @@ package icpmapp.config;
 
 import lombok.RequiredArgsConstructor;
 import icpmapp.services.UserService;
+import org.apache.catalina.connector.Connector;
+import org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory;
+import org.springframework.boot.web.servlet.server.ServletWebServerFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -36,8 +39,9 @@ public class SecurityConfiguration {
         http.cors(cors -> cors.configurationSource(corsConfigurationSource())).
                 csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/auth/**").permitAll()
-                        .requestMatchers("/api/v1/gallery/images/{filepath}").permitAll()
+                        .requestMatchers("**").permitAll()
+//                        .requestMatchers("/api/v1/auth/**").permitAll()
+//                        .requestMatchers("/api/v1/gallery/images/{filepath}").permitAll()
                         .anyRequest().authenticated())
 
                 .sessionManagement(manager -> manager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -50,10 +54,17 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Arrays.asList("https://localhost:5173","http://localhost:5173", "https://localhost:4173","https://localhost:3000")); // Specify your frontend origin
-        configuration.setAllowedMethods(Arrays.asList("*"));//"GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        configuration.setAllowedHeaders(Arrays.asList("*"));//"Authorization", "Content-Type"));
-        configuration.setAllowCredentials(true);
+//        configuration.setAllowedOriginPatterns(Arrays.asList("*",
+//                "https://localhost*",
+//                "http://localhost*",
+//                "https://icpm.compute.dtu.dk")); // Specify your frontend origin
+        configuration.setAllowedOrigins(Arrays.asList("*"));
+//                "https://localhost*",
+//                "http://localhost*",
+//                "https://icpm.compute.dtu.dk")); // Specify your frontend origin
+        configuration.setAllowedMethods(Arrays.asList("*")); //"GET", "POST", "PUT", "DELETE", "OPTIONS"));
+        configuration.setAllowedHeaders(Arrays.asList("*")); //"Authorization", "Content-Type"));
+//        configuration.setAllowCredentials(true);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", configuration); // Apply this configuration to all paths
         return source;
