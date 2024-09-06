@@ -17,6 +17,7 @@ public class SessionHeaderDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private SessionType type;
+    private Long likes;
 
     public SessionHeaderDTO(SessionHeader sessionHeader) {
         this.id = sessionHeader.getId();
@@ -26,5 +27,6 @@ public class SessionHeaderDTO {
         this.startTime = sessionHeader.getStartTime();
         this.endTime = sessionHeader.getEndTime();
         this.type = sessionHeader.getType();
+        this.likes = 0l;
     }
 }

@@ -30,10 +30,10 @@ public class AgendaServiceImpl implements AgendaService {
     private final UserRepository userRepository;
 
     public List<SessionHeaderDTO> fetchAll() {
-        List<SessionHeader> headers = sessionHeaderRepository.findAll();
-        return headers.stream()
-                .map(SessionHeaderDTO::new)
-                .collect(Collectors.toList());
+        return sessionHeaderRepository.findSessionsWithLikes(); //sessionHeaderRepository.findAll();
+//        return headers.stream()
+//                .map(SessionHeaderDTO::new)
+//                .collect(Collectors.toList());
     }
 
     @Override
@@ -128,7 +128,8 @@ public class AgendaServiceImpl implements AgendaService {
                 session.getLocation(),
                 session.getStartTime(),
                 session.getEndTime(),
-                session.getType()
+                session.getType(),
+                0l
         );
     }
 

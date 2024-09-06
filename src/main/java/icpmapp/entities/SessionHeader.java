@@ -18,11 +18,8 @@ public class SessionHeader {
     private LocalDateTime endTime;
     @Enumerated(EnumType.STRING)
     private SessionType type;
-
     @ManyToMany(mappedBy = "likedBy")
     private List<User> likes;
-
-
     @OneToOne(mappedBy = "header", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private SessionContent content;
 
