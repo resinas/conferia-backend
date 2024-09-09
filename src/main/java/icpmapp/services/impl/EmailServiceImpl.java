@@ -31,7 +31,7 @@ public class EmailServiceImpl implements EmailService{
             throw new AccessDeniedException("User already activated.");
         }
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@icpm.compute.dtu.dk");
+        message.setFrom("noreply@api-icpm.compute.dtu.dk");
         message.setTo(emailRequest.getReceiver());
         message.setSubject("ICPM app account activation");
         String token =  jwtService.generateToken(userDetails);
@@ -50,7 +50,7 @@ public class EmailServiceImpl implements EmailService{
             throw new AccessDeniedException("User needs to be activated");
         }
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@icpm.compute.dtu.dk");
+        message.setFrom("noreply@api-icpm.compute.dtu.dk");
         message.setTo(emailRequest.getReceiver());
         message.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
