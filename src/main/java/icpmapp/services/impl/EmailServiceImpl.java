@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService{
         }
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setFrom("noreply@api-icpm.compute.dtu.dk");
+        helper.setFrom("noreply@compute.dtu.dk");
         helper.setTo(emailRequest.getReceiver());
         helper.setSubject("ICPM app account activation");
         String token =  jwtService.generateToken(userDetails);
@@ -55,7 +55,7 @@ public class EmailServiceImpl implements EmailService{
         }
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setFrom("noreply@api-icpm.compute.dtu.dk");
+        helper.setFrom("noreply@compute.dtu.dk");
         helper.setTo(emailRequest.getReceiver());
         helper.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
