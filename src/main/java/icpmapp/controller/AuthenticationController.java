@@ -39,6 +39,7 @@ public class AuthenticationController {
             return ResponseEntity.ok().body("signup email sent successfully.");
         } catch (Exception e) {
             System.err.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send signup email.");
         }
     }
