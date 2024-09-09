@@ -35,7 +35,7 @@ public class EmailServiceImpl implements EmailService{
         message.setTo(emailRequest.getReceiver());
         message.setSubject("ICPM app account activation");
         String token =  jwtService.generateToken(userDetails);
-        message.setText("To activate your account for the ICPM app, click on the following link: https://localhost:5173/icpm-navigator/#/auth/register/" + token);
+        message.setText("To activate your account for the ICPM app, click on the following link: https://icpm.compute.dtu.dk/icpm-navigator/#/auth/register/" + token);
         mailSender.send(message);
     }
 
@@ -50,11 +50,11 @@ public class EmailServiceImpl implements EmailService{
             throw new AccessDeniedException("User needs to be activated");
         }
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("auth@ICPM24.com");
+        message.setFrom("noreply@icpm.compute.dtu.dk");
         message.setTo(emailRequest.getReceiver());
         message.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
-        message.setText("Use this link to reset your password: https://localhost:5173/icpm-navigator/#/auth/login/resetpassword/" + token);
+        message.setText("To reset your ICPM app account password, click on the following link: https://icpm.compute.dtu.dk/icpm-navigator/#/auth/login/resetpassword/" + token);
         mailSender.send(message);
     }
 }
