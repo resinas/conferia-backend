@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -245,11 +246,24 @@ public class StorageServiceImpl implements StorageService {
 
     public byte[] convertToWebP(File inputImage) throws IOException {
         // Read the input image
-        BufferedImage image = ImageIO.read(inputImage);
+        BufferedImage originalImage = ImageIO.read(inputImage);
+
+        // Calculate the new height to maintain the aspect ratio
+        int targetWidth = 400;
+        int originalWidth = originalImage.getWidth();
+        int originalHeight = originalImage.getHeight();
+        int targetHeight = (targetWidth * originalHeight) / originalWidth;
+
+        // Resize the image
+        Image resultingImage = originalImage.getScaledInstance(targetWidth, targetHeight, Image.SCALE_SMOOTH);
+        BufferedImage outputImage = new BufferedImage(targetWidth, targetHeight, BufferedImage.TYPE_INT_RGB);
+        Graphics2D g2d = outputImage.createGraphics();
+        g2d.drawImage(resultingImage, 0, 0, null);
+        g2d.dispose();
 
         // Create a byte array output stream to capture the WebP output
         try (ByteArrayOutputStream baos = new ByteArrayOutputStream()) {
-            ImageIO.write(image, "webp", baos);
+            ImageIO.write(outputImage, "webp", baos);
             // Return the byte array
             return baos.toByteArray();
         } catch (IOException e) {
