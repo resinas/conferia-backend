@@ -130,6 +130,7 @@ public class StorageServiceImpl implements StorageService {
             getSingleImageDataResponse.setImageLikes(image.getLikedBy().size());
             getSingleImageDataResponse.setHasLiked(image.getLikedBy().contains(user));
             getSingleImageDataResponse.setAuthorId(image.getOwner().getId());
+            getSingleImageDataResponse.setUploadTime(image.getUploadTime());
         }
         return getSingleImageDataResponse;
 
