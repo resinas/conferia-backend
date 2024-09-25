@@ -39,7 +39,7 @@ public class EmailServiceImpl implements EmailService{
         helper.setTo(emailRequest.getReceiver());
         helper.setSubject("ICPM app account activation");
         String token =  jwtService.generateToken(userDetails);
-        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To activate your account for the ICPM app, click on the following link: https://icpm.compute.dtu.dk/icpm-navigator/#/auth/register/" + token + ".</p></body></html>", true);
+        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To activate your account for the ICPM app, click on the following link: https://icpm.compute.dtu.dk/#/auth/register/" + token + ".</p></body></html>", true);
         mailSender.send(mimeMessage);
     }
 
@@ -59,7 +59,7 @@ public class EmailServiceImpl implements EmailService{
         helper.setTo(emailRequest.getReceiver());
         helper.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
-        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To reset your ICPM app account password, click on the following link: https://icpm.compute.dtu.dk/icpm-navigator/#/auth/login/resetpassword/" + token + ".</p></body></html>", true);
+        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To reset your ICPM app account password, click on the following link: https://icpm.compute.dtu.dk/#/auth/login/resetpassword/" + token + ".</p></body></html>", true);
         mailSender.send(mimeMessage);
     }
 }
