@@ -51,9 +51,10 @@ public class UpdatesController {
                         currentUser.getLastDownloadPictures());
 
         UpdateResponse response = new UpdateResponse();
-        Random rnd = new Random();
         response.setNumberOfMessages(messages);
         response.setNumberOfPictures(pictures);
+        response.setLastDownloadMessages(currentUser.getLastDownloadMessages());
+        response.setLastDownloadPictures(currentUser.getLastDownloadPictures());
         return ResponseEntity.ok(response);
     }
 }
