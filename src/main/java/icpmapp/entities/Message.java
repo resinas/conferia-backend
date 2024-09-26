@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Table(name = "messages")
@@ -21,4 +22,7 @@ public class Message {
     private String title;
     private String text;
     private LocalDateTime creationTime;
+
+    @ManyToMany(mappedBy = "readMessages")
+    private List<User> readBy;
 }

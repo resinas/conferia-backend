@@ -44,7 +44,23 @@ public class MessageController {
         currentUser.setLastDownloadMessages(LocalDateTime.now());
         userRepository.save(currentUser);
 
-        return ResponseEntity.ok(messageService.getMessages());
+        return ResponseEntity.ok(messageService.getMessages(currentUser));
+    }
+
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @GetMapping("/read/{id}")
+    public ResponseEntity<String> readMessage (
+            @RequestHeader(value = "Authorization", required = false) String authorizationHeader,
+            @PathVariable Integer id) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        User user = userRepository.findByEmail(username).orElseThrow(() ->
+                new IllegalArgumentException("invalid email."));
+
+        if (messageService.read(id, user)) {
+            return ResponseEntity.ok("Message read.");
+        }
+        return ResponseEntity.badRequest().body("Message not read.");
     }
 
     @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")

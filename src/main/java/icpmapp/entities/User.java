@@ -41,6 +41,13 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<SessionHeader> likedBy;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "read_messages",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "message_id")
+    )
+    private List<Message> readMessages;
     private LocalDateTime lastDownloadMessages;
     private LocalDateTime lastDownloadPictures;
 

@@ -1,10 +1,8 @@
 package icpmapp.dto.responses;
 
-import icpmapp.entities.User;
 import lombok.Data;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Data
 public class MessageResponse {
@@ -15,4 +13,5 @@ public class MessageResponse {
     private Integer authorId;
     private Integer avatar;
     private LocalDateTime date;
+    private Boolean read;
 }

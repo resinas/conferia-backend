@@ -17,4 +17,12 @@ public interface MessageRepository extends JpaRepository<Message, Integer> {
             value = "SELECT COUNT(m.id) FROM messages m WHERE m.creation_time >= :date",
             nativeQuery = true)
     Integer getMessagesAfterDate(@Param("date") LocalDateTime date);
+
+    @Query(
+            value = "SELECT COUNT(m.id) AS unread_messages_count " +
+                    "FROM messages m " +
+                    "LEFT JOIN read_messages mr ON m.id = mr.message_id AND mr.user_id = :user " +
+                    "WHERE mr.message_id IS NULL",
+            nativeQuery = true)
+    Integer getMessagesNotReadByUser(@Param("user") Integer user);
 }

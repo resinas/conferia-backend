@@ -40,10 +40,7 @@ public class UpdatesController {
         String token = authorizationHeader.substring(7);
         User currentUser = userService.getUser(jwtService.extractUserName(token));
 
-        int messages = messageRepository.getMessagesAfterDate(
-                currentUser.getLastDownloadMessages() == null?
-                        LocalDateTime.of(1970, 1, 1, 0, 0) :
-                        currentUser.getLastDownloadMessages());
+        int messages = messageRepository.getMessagesNotReadByUser(currentUser.getId());
 
         int pictures = galleryStorageRepository.getPicturesAfterDate(
                 currentUser.getLastDownloadPictures() == null?

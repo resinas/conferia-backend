@@ -1,10 +1,8 @@
 package icpmapp.services.impl;
 
 import icpmapp.dto.requests.MessageRequest;
-import icpmapp.dto.responses.AttendeeResponse;
 import icpmapp.dto.responses.MessageResponse;
 import icpmapp.entities.Message;
-import icpmapp.entities.Page;
 import icpmapp.entities.User;
 import icpmapp.repository.MessageRepository;
 import icpmapp.repository.UserRepository;
@@ -15,8 +13,8 @@ import org.springframework.data.domain.Sort;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import javax.swing.text.html.Option;
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,9 +27,15 @@ public class MessageServiceImpl implements MessageService {
     private final RestClientAutoConfiguration restClientAutoConfiguration;
 
     @Override
-    public List<MessageResponse> getMessages() {
+    public List<MessageResponse> getMessages(User currentUser) {
         List<Message> list = messageRepository.findAll(Sort.by(Sort.Direction.DESC, "creationTime"));
-        return list.stream().map(this::convertToDto).toList();
+        List<MessageResponse> responses = new LinkedList<>();
+        list.forEach(msg -> {
+            MessageResponse mr = convertToDto(msg);
+            mr.setRead(msg.getReadBy().contains(currentUser));
+            responses.add(mr);
+        });
+        return responses;
     }
 
     @Override
@@ -45,7 +49,10 @@ public class MessageServiceImpl implements MessageService {
         msg.setText(messageRequest.getText());
         msg.setCreationTime(LocalDateTime.now());
 
-        return messageRepository.save(msg);
+        Message set = messageRepository.save(msg);
+        read(set.getId(), user);
+
+        return set;
     }
 
     @Override
@@ -58,7 +65,21 @@ public class MessageServiceImpl implements MessageService {
         return false;
     }
 
-    private MessageResponse convertToDto(Message msg) {
+    @Override
+    public boolean read(Integer id, User user) {
+        Optional<Message> msg = messageRepository.findById(id);
+        if (msg.isPresent()) {
+            Message message = msg.get();
+            if (message.getReadBy() == null || !message.getReadBy().contains(user)) {
+                user.getReadMessages().add(message);
+                userRepository.save(user);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static MessageResponse convertToDto(Message msg) {
         MessageResponse resp = new MessageResponse();
         resp.setId(msg.getId());
         resp.setTitle(msg.getTitle());
