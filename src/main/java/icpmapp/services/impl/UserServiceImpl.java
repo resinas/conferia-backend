@@ -38,7 +38,7 @@ public class UserServiceImpl implements UserService {
             getUserResponse.setLastname(user.getLastname());
             getUserResponse.setCompany(user.getCompany());
             getUserResponse.setCountry(user.getCountry());
-            getUserResponse.setSharingChoice(user.getSharingchoice());
+            getUserResponse.setSharingChoice(user.getSharingchoice() == null? true : user.getSharingchoice());
             getUserResponse.setProfilePicture(user.getAvatar_path());
             getUserResponse.setId(user.getId());
             return getUserResponse;

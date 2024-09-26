@@ -4,6 +4,8 @@ import lombok.Data;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -34,6 +36,8 @@ public class User implements UserDetails {
     private Role role;
     @ManyToMany(mappedBy = "likedBy", fetch = FetchType.LAZY)
     private List<GalleryImage> likes;
+    @OneToMany(mappedBy = "author")
+    private List<Message> messages;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "session_likes",
@@ -41,12 +45,15 @@ public class User implements UserDetails {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     private List<SessionHeader> likedBy;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = CascadeType.REMOVE)
     @JoinTable(
             name = "read_messages",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "message_id")
     )
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<Message> readMessages;
     private LocalDateTime lastDownloadMessages;
     private LocalDateTime lastDownloadPictures;

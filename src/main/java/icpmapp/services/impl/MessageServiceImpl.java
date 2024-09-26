@@ -59,6 +59,11 @@ public class MessageServiceImpl implements MessageService {
     public boolean delete(Integer id, User userRequestingDelete) {
         Optional<Message> msg = messageRepository.findById(id);
         if (msg.isPresent() && (msg.get().getAuthor().getId() == userRequestingDelete.getId())) {
+
+            msg.get().getReadBy().forEach(user -> user.getReadMessages().remove(msg.get()));
+            msg.get().getReadBy().clear();
+            userRepository.saveAll(msg.get().getReadBy());
+
             messageRepository.deleteById(id);
             return true;
         }
