@@ -1,10 +1,11 @@
 package icpmapp.controller;
 
+import icpmapp.dto.requests.*;
+import icpmapp.entities.User;
+import icpmapp.repository.UserRepository;
+import icpmapp.services.JWTService;
+import icpmapp.services.UserService;
 import lombok.RequiredArgsConstructor;
-import icpmapp.dto.requests.EmailRequest;
-import icpmapp.dto.requests.JwtAuthenticationResponse;
-import icpmapp.dto.requests.RefreshTokenRequest;
-import icpmapp.dto.requests.SigninRequest;
 import icpmapp.services.AuthenticationService;
 import icpmapp.services.EmailService;
 import org.springframework.http.HttpStatus;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
 
     private final AuthenticationService authenticationService;
+    private final UserRepository userRepository;
     private final EmailService emailService;
-
+    private final UserService userService;
+    private final JWTService jwtService;
 
     //User sign-in, and JWT token management.
     @PostMapping("/signin")
@@ -53,5 +56,4 @@ public class AuthenticationController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to send reset email.");
         }
     }
-
 }

@@ -1,10 +1,7 @@
 package icpmapp.controller;
 
+import icpmapp.dto.requests.*;
 import lombok.RequiredArgsConstructor;
-import icpmapp.dto.requests.ChangePasswordRequest;
-import icpmapp.dto.requests.JwtAuthenticationResponse;
-import icpmapp.dto.requests.RegisterRequest;
-import icpmapp.dto.requests.UserRequest;
 import icpmapp.dto.responses.GetUserResponse;
 import icpmapp.dto.responses.UserIdResponse;
 import icpmapp.dto.responses.UsernameResponse;
@@ -88,6 +85,16 @@ public class AccountController {
         String username = jwtService.extractUserName(token);
         authenticationService.changePasswordForUser(changePasswordRequest, username);
         return ResponseEntity.ok("Password has been changed successfully");
+    }
+
+    //Change password
+    @PreAuthorize("hasAnyAuthority('USER', 'ADMIN')")
+    @PostMapping("/resetPassword")
+    public ResponseEntity<String> changePassword(@RequestHeader(value = "Authorization", required = false) String authorizationHeader, @RequestBody ResetPasswordRequest resetPasswordRequest) {
+        String token = authorizationHeader.substring(7);
+        String username = jwtService.extractUserName(token);
+        authenticationService.resetPasswordForUser(resetPasswordRequest, username);
+        return ResponseEntity.ok("Password has been reset successfully");
     }
 
     // Change profile picture

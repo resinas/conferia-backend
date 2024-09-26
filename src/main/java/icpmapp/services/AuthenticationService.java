@@ -18,4 +18,6 @@ public interface AuthenticationService {
 
     User changePasswordForUser(ChangePasswordRequest changePasswordRequest, String username);
 
+    User resetPasswordForUser(ResetPasswordRequest resetPasswordRequest, String username);
+
 }

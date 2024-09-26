@@ -120,5 +120,12 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.save(user);
     }
 
+    public User resetPasswordForUser(ResetPasswordRequest resetPasswordRequest, String username) {
+        var user = userRepository.findByEmail(username).orElseThrow(() ->
+                new IllegalArgumentException("invalid email."));
+        user.setPassword(passwordEncoder.encode(resetPasswordRequest.getPassword()));
+
+        return userRepository.save(user);
+    }
 
 }
