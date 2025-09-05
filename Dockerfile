@@ -5,7 +5,7 @@ FROM openjdk:17-slim
 WORKDIR /app
 
 # Copy the project’s jar file into the container
-COPY target/Springsecurity-1.0-SNAPSHOT.jar app.jar
+COPY target/conferia-backend-1.0-SNAPSHOT.jar app.jar
 
 # Expose port 8080
 EXPOSE 8080
