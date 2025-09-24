@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import icpmapp.services.EmailService;
 import icpmapp.services.JWTService;
 import icpmapp.services.UserService;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -23,6 +25,13 @@ public class EmailServiceImpl implements EmailService{
     private final JWTService jwtService;
     private final UserService userService;
 
+    @Value("${notifications.from}")
+    private String fromAddress;
+    @Value("${notifications.base-url}")
+    private String baseUrl;
+    @Value("${notifications.logo-url}")
+    private String logoUrl;
+
     public void sendSignup(EmailRequest emailRequest) throws AccessDeniedException, MessagingException {
         UserDetails userDetails = userService.userDetailsService().loadUserByUsername(emailRequest.getReceiver());
         boolean hasRequiredRole = userDetails.getAuthorities().stream()
@@ -35,11 +44,12 @@ public class EmailServiceImpl implements EmailService{
         }
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setFrom("noreply@compute.dtu.dk");
+        helper.setFrom(fromAddress);
         helper.setTo(emailRequest.getReceiver());
-        helper.setSubject("ICPM app account activation");
+        helper.setSubject("BPM app account activation");
         String token =  jwtService.generateToken(userDetails);
-        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To activate your account for the ICPM app, click on the following link: https://icpm.compute.dtu.dk/#/auth/register/" + token + ".</p></body></html>", true);
+        String text = "<html><body><img src=\"" + logoUrl + "\" height='50' /><p>Hi!</p><p>To activate your account for the BPM app, click on the following link: "+ baseUrl +"/#/auth/register/" + token + ".</p></body></html>";
+        helper.setText(text, true);
         mailSender.send(mimeMessage);
     }
 
@@ -55,11 +65,11 @@ public class EmailServiceImpl implements EmailService{
         }
         MimeMessage mimeMessage = mailSender.createMimeMessage();
         MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, "utf-8");
-        helper.setFrom("noreply@compute.dtu.dk");
+        helper.setFrom(fromAddress);
         helper.setTo(emailRequest.getReceiver());
         helper.setSubject("Reset password");
         String token =  jwtService.generateToken(userDetails);
-        helper.setText("<html><body><img src=\"https://icpmconference.org/2024/wp-content/uploads/sites/9/2023/08/cropped-icpm-logo-1.png\" height='50' /><p>Hi!</p><p>To reset your ICPM app account password, click on the following link: https://icpm.compute.dtu.dk/#/auth/login/resetpassword/" + token + ".</p></body></html>", true);
+        helper.setText("<html><body><img src=\""+logoUrl+"\" height='50' /><p>Hi!</p><p>To reset your BPM app account password, click on the following link: "+baseUrl+"/#/auth/login/resetpassword/" + token + ".</p></body></html>", true);
         mailSender.send(mimeMessage);
     }
 }
